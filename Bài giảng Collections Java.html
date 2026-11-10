@@ -1,0 +1,1913 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bài giảng Java Collections: ArrayList, HashMap &amp; Exception</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Caveat:wght@700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@700;800&display=swap">
+<script>(function(){try{var t=localStorage.getItem('col.theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
+<style>
+/* ===== Giao diện: Cosmic Galaxy Bento UI (Indigo / Periwinkle) ===== */
+:root{
+  --bg:#534b7e; --bg2:#3e3766;
+  --panel:#7a70b5; --panel-hi:#8b81c7; --panel-dk:#3f3769;
+  --surface:#b7b0e4; --surface2:#a199d6; --card-dk:#453d73;
+  --fg:#1e193b; --fg-on-dk:#f4f2ff;
+  --muted:#473f75; --muted-on-dk:#cbc5f0;
+  --line:rgba(255,255,255,.34); --line-dk:rgba(30,25,60,.22);
+  --accent:#433a73; --accent2:#62579e; --accent-ink:#ffffff; --accent-soft:#d5d0f5; --accent-dk:#28214d;
+  --side1:#6e64a8; --side2:#494078; --hero1:#847ac0; --hero2:#6a60a4;
+  --pink:#d9b8e8; --pink-i:#5e2d79; --yellow:#e8d9b5; --yellow-i:#6b4f12; --blue:#b8cdf0; --blue-i:#244379; --green:#b4e2d0; --green-i:#165942; --purple:#ccc6f2; --purple-i:#3e3570;
+  --hl:#f7e8a4; --ok:#156847; --ok-soft:#c7eedd; --bad:#8f1d35; --bad-soft:#f7ccd5; --warn:#784d06; --warn-soft:#f7e3b5;
+  --code-bg:#282249; --code-fg:#f0edff;
+  --k:#ff9ce3; --t:#8be9fd; --s:#94f0b3; --c:#958ec2; --a:#ffd479; --n:#ffb86c;
+  --sh:0 20px 44px -18px rgba(18,13,44,.65),0 4px 12px rgba(18,13,44,.3);
+  --sh-sm:0 10px 22px -10px rgba(18,13,44,.55),0 2px 5px rgba(18,13,44,.22);
+  --clay:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -4px 0 rgba(24,18,56,.22);
+  --display:'Space Grotesk','Be Vietnam Pro',system-ui,sans-serif;
+  --script:'Caveat',cursive;
+  --body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#dad5f4; --bg2:#c5bef0;
+  --panel:#eeecfb; --panel-hi:#f7f6ff; --panel-dk:#584e90;
+  --surface:#ffffff; --surface2:#e3dff8; --card-dk:#524888;
+  --fg:#221c44; --fg-on-dk:#ffffff;
+  --muted:#5e568c; --muted-on-dk:#ded9fa;
+  --line:#cec7f0; --line-dk:rgba(90,75,160,.2);
+  --accent:#5b4ea0; --accent2:#7c6ec4; --accent-ink:#ffffff; --accent-soft:#e6e2fa; --accent-dk:#392f70;
+  --side1:#6d61b0; --side2:#4d4288; --hero1:#7c70bd; --hero2:#5c509c;
+  --code-bg:#241e44; --code-fg:#f0edff;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15.5px;line-height:1.65;-webkit-text-size-adjust:100%;
+  background-image:
+    radial-gradient(2px 2px at 12% 18%,rgba(255,255,255,.55),transparent),
+    radial-gradient(1.5px 1.5px at 38% 72%,rgba(255,255,255,.45),transparent),
+    radial-gradient(2px 2px at 78% 26%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1.5px 1.5px at 88% 82%,rgba(255,255,255,.4),transparent),
+    radial-gradient(950px 550px at 8% 0%,rgba(164,151,236,.35),transparent 65%),
+    radial-gradient(900px 600px at 95% 100%,rgba(42,33,84,.65),transparent 65%);
+  background-attachment:fixed}
+img{max-width:100%}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #dcd6ff;outline-offset:2px}
+code{font-family:var(--mono);font-size:.86em;background:rgba(36,28,76,.16);color:var(--accent-dk);padding:.1em .42em;border-radius:6px;font-weight:600}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.2;margin:0}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.fill{fill:currentColor;stroke:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ===== khung Cosmic Bento ===== */
+.shell{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;padding:22px;max-width:1480px;margin:0 auto;min-height:100vh}
+.side{position:sticky;top:22px;height:calc(100vh - 44px);background:linear-gradient(180deg,var(--side1),var(--side2));border-radius:32px;padding:20px 14px 16px;display:flex;flex-direction:column;gap:13px;color:#fff;box-shadow:var(--sh),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -5px 0 rgba(20,14,48,.35);border:1.5px solid rgba(255,255,255,.28);overflow-y:auto;scrollbar-width:none;z-index:35}
+.side::-webkit-scrollbar{display:none}
+.prof{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:4px 6px}
+.avatar{width:78px;height:78px;border-radius:24px;background:linear-gradient(145deg,#dcd7ff,#9b90df);border:3px solid rgba(255,255,255,.75);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:30px;color:#30275c;box-shadow:0 12px 22px -10px rgba(18,12,48,.7),inset 0 -4px 0 rgba(48,39,92,.25)}
+.prof .hi{font-weight:800;font-size:18px;line-height:1.25;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof .id{font-size:12px;opacity:.88;font-weight:600;background:rgba(28,21,62,.35);padding:2px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.2)}
+.sprog{background:rgba(28,21,62,.36);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:10px 12px;font-size:12.5px;font-weight:700}
+.sprog .r{display:flex;justify-content:space-between}
+.sprog .bw{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-top:6px}
+.sprog .bw i{display:block;height:100%;width:0;background:linear-gradient(90deg,#dcd6ff,#fff);border-radius:99px;transition:width .4s}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nv{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:16px;color:#f0edff;background:transparent;border:1px solid transparent;cursor:pointer;font-weight:700;font-size:14px;text-align:left;width:100%;transition:all .15s}
+.nv:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2)}
+.nv .nt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nv .pr{font-size:11px;font-weight:800;background:rgba(24,18,56,.38);padding:2px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.nv .pr:empty{display:none}
+.nv.done .pr{background:#8fe8c2;color:#103f2c}
+.nv[aria-current="page"]{background:#dcd7fb;color:#2a2254;border-color:#fff;box-shadow:0 10px 18px -8px rgba(18,12,48,.65),inset 0 -3px 0 rgba(60,48,118,.22)}
+.nv[aria-current="page"] .pr{background:#433a73;color:#fff}
+.nv[aria-current="page"].done .pr{background:#156847;color:#fff}
+.promo{margin-top:auto;background:linear-gradient(160deg,#3d3468,#2b244d);border:1.5px solid rgba(255,255,255,.28);border-radius:24px;padding:12px 14px 14px;color:#f4f2ff;text-align:center;box-shadow:var(--clay),0 12px 24px -12px rgba(12,8,34,.7)}
+.promo .art{width:86px;height:86px;margin:-4px auto 4px}
+.promo b{display:block;font-size:15.5px;font-weight:800;letter-spacing:.02em}
+.promo p{margin:3px 0 10px;font-size:12px;line-height:1.4;color:#cbc5f0}
+.promo .btn{background:linear-gradient(180deg,#cfc8fa,#a99fe6);color:#261e4e;box-shadow:0 8px 16px -8px rgba(0,0,0,.6),inset 0 -3px 0 rgba(38,30,78,.25),inset 0 2px 0 rgba(255,255,255,.7)}
+.art{position:relative;display:grid;place-items:center;overflow:visible}
+.art svg{width:100%;height:100%;display:block;filter:drop-shadow(0 12px 18px rgba(20,14,50,.45))}
+
+/* ===== khung chính kiểu Galaxy Bento ===== */
+.main{min-width:0;background:linear-gradient(180deg,var(--panel-hi),var(--panel));border-radius:36px;padding:24px 28px 44px;box-shadow:var(--sh),inset 0 2px 0 rgba(255,255,255,.45),inset 0 -6px 0 rgba(28,20,64,.25);border:1.5px solid rgba(255,255,255,.36);position:relative}
+.top{display:flex;align-items:center;gap:11px;margin-bottom:22px;flex-wrap:wrap;background:rgba(44,36,84,.28);border:1.5px solid rgba(255,255,255,.32);border-radius:999px;padding:8px 12px 8px 18px;box-shadow:inset 0 2px 6px rgba(20,14,50,.28)}
+.top .ttl{flex:1;min-width:170px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.top h1{font-size:21px;font-weight:800;letter-spacing:-.01em;color:#fff;text-shadow:0 2px 6px rgba(20,14,50,.35)}
+.top .sub{font-size:12.5px;color:#ded9fa;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1.5px solid rgba(255,255,255,.55);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:800;color:var(--fg);box-shadow:var(--sh-sm),var(--clay);white-space:nowrap}
+.pill b{color:var(--accent-dk);font-variant-numeric:tabular-nums}
+.pill .ic{width:17px;height:17px}
+.pill.xp .ic{color:#784d06}
+.pill.tm .ic{color:#244379}
+button.pill{cursor:pointer}
+.sync .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.sync.ok .dot{background:#158458;box-shadow:0 0 0 3px rgba(21,132,88,.25)}
+.sync.wait .dot{background:#b8780a;box-shadow:0 0 0 3px rgba(184,120,10,.25)}
+.sync.err .dot{background:#b82543;box-shadow:0 0 0 3px rgba(184,37,67,.25)}
+.round{width:40px;height:40px;border-radius:14px;background:var(--surface);border:1.5px solid rgba(255,255,255,.6);box-shadow:var(--sh-sm),var(--clay);display:grid;place-items:center;cursor:pointer;color:var(--accent-dk);flex:none;padding:0;transition:transform .12s}
+.round:hover{transform:translateY(-1px)}
+.uavatar{background:linear-gradient(145deg,#433a73,#2b244f);color:#fff;font-weight:800;font-size:15px}
+#menuBtn{display:none}
+.hdwrap{position:relative}
+#umenu{position:absolute;right:0;top:58px;width:min(350px,calc(100vw - 24px));background:var(--surface);border:1.5px solid rgba(255,255,255,.65);border-radius:24px;padding:18px;box-shadow:0 24px 50px -16px rgba(14,10,36,.75);z-index:45;display:flex;flex-direction:column;gap:10px;color:var(--fg)}
+#umenu p{margin:0}
+.mhd{display:flex;gap:12px;align-items:center}
+.mhd .round{width:46px;height:46px}
+.mbox{background:rgba(44,36,84,.12);border:1px solid var(--line-dk);border-radius:16px;padding:10px 12px;font-size:13px}
+.mbox h4{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:800}
+.mbox input{width:100%;font:inherit;font-size:13px;background:#fff;color:#1e193b;border:1.5px solid var(--accent);border-radius:10px;padding:7px 10px;margin:6px 0}
+.scrim{position:fixed;inset:0;background:rgba(16,12,38,.55);backdrop-filter:blur(3px);z-index:34}
+
+/* ===== Hero & Bento tổng quan (đúng chất TENANG / Galaksi UI) ===== */
+.hero{position:relative;border-radius:30px;background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 100%);padding:22px;overflow:hidden;box-shadow:var(--sh),var(--clay);border:1.5px solid rgba(255,255,255,.38);display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.hero-l{display:flex;flex-direction:column;justify-content:space-between;padding:8px 10px;color:#fff;position:relative;z-index:2}
+.hero-tag{font-size:11.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#e2ddff;opacity:.92}
+.gal-title{position:relative;margin:6px 0 8px;line-height:.95}
+.gal-title .big{display:block;font-family:var(--display);font-weight:800;font-size:clamp(34px,4.6vw,54px);letter-spacing:.06em;text-transform:uppercase;background:linear-gradient(180deg,#ffffff 0%,#beb6f0 55%,#443b75 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 10px rgba(24,18,58,.45))}
+.gal-title .scr{font-family:var(--script);font-size:clamp(30px,4vw,46px);color:#fff;position:absolute;left:18%;top:22%;transform:rotate(-5deg);text-shadow:0 4px 12px rgba(24,18,56,.75);pointer-events:none}
+.hero-sub{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#dcd6ff;font-weight:700;margin-bottom:12px}
+.hero-r{background:var(--panel-dk);border:1.5px solid rgba(255,255,255,.26);border-radius:24px;padding:20px 22px;color:var(--fg-on-dk);box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 14px 28px -14px rgba(14,10,36,.7);position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center}
+.hero-r h2{font-size:19px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;color:#fff}
+.hero-r p{margin:0;color:var(--muted-on-dk);font-size:14px;line-height:1.55;max-width:46ch}
+.hero .astro{position:absolute;right:10px;top:-8px;width:130px;height:130px;z-index:3;pointer-events:none}
+.dock{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.dk-ic{width:42px;height:42px;border-radius:13px;background:var(--surface);color:var(--accent-dk);border:1.5px solid rgba(255,255,255,.65);box-shadow:var(--sh-sm),var(--clay);display:grid;place-items:center;cursor:pointer;transition:transform .12s}
+.dk-ic:hover{transform:translateY(-2px)}
+
+.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-dk);background:rgba(255,255,255,.45);display:inline-block;padding:3px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.5)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.stat{border-radius:24px;padding:16px;background:var(--surface);box-shadow:var(--sh-sm),var(--clay);border:1.5px solid rgba(255,255,255,.55);min-width:0;position:relative;overflow:hidden}
+.stat .ti{width:42px;height:42px;border-radius:14px;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:inset 0 -3px 0 rgba(0,0,0,.22),inset 0 2px 0 rgba(255,255,255,.35)}
+.stat .lb{font-weight:800;color:var(--muted);font-size:13px;margin-top:10px}
+.stat .vl{font-family:var(--display);font-size:29px;font-weight:800;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--fg)}
+.stat .vl small{font-size:14px;color:var(--muted);font-weight:700}
+.stat .sb{font-size:12px;color:var(--accent-dk);font-weight:700;margin-top:2px}
+
+.dgrid{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.card{background:var(--surface);border-radius:26px;padding:18px 20px;box-shadow:var(--sh-sm),var(--clay);border:1.5px solid rgba(255,255,255,.55);min-width:0;position:relative}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.card-h h3{font-size:16px;font-weight:800;letter-spacing:.01em}
+.tagp{font-size:12px;font-weight:800;border:1.5px solid rgba(255,255,255,.65);border-radius:999px;padding:4px 12px;color:var(--accent-dk);background:rgba(255,255,255,.55);cursor:pointer;box-shadow:var(--clay)}
+.tagp:hover{background:#fff}
+
+/* Biểu đồ cột & tròn */
+.bars{display:flex;align-items:flex-end;gap:10px;padding-top:4px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;background:none;border:0;cursor:pointer;padding:0}
+.bcol .bt{width:100%;max-width:38px;height:146px;background:rgba(44,36,84,.16);border:1px solid rgba(255,255,255,.45);border-radius:13px;display:flex;align-items:flex-end;overflow:hidden;padding:2px}
+.bcol .bt i{display:block;width:100%;border-radius:10px;background:linear-gradient(180deg,#6e62b5,#3c3368);min-height:8px;box-shadow:inset 0 2px 0 rgba(255,255,255,.45);transition:height .5s}
+.bcol .bl{font-size:11.5px;font-weight:800;color:var(--muted)}
+.bcol .bv{font-size:11px;font-weight:800;color:var(--fg);font-variant-numeric:tabular-nums}
+.bcol:hover .bl,.bcol.cur .bl{color:var(--accent-dk);text-decoration:underline}
+.donut-w{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut{width:146px;height:146px;border-radius:50%;position:relative;flex:none;box-shadow:var(--sh-sm);border:2px solid rgba(255,255,255,.6)}
+.donut::after{content:"";position:absolute;inset:28px;border-radius:50%;background:var(--surface);box-shadow:inset 0 3px 8px rgba(24,18,56,.25)}
+.donut .ct{position:absolute;inset:0;display:grid;place-items:center;z-index:1;text-align:center;line-height:1.1}
+.donut .ct b{display:block;font-family:var(--display);font-size:24px;font-weight:800}
+.donut .ct span{font-size:11px;color:var(--muted);font-weight:800}
+.lgd{display:flex;flex-direction:column;gap:8px;flex:1;min-width:150px}
+.lgd div{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.lgd i{width:11px;height:11px;border-radius:4px;flex:none;border:1px solid rgba(255,255,255,.6)}
+.lgd span{flex:1}
+.lgd b{font-variant-numeric:tabular-nums}
+
+/* Bento 4 ô khám phá kiểu vũ trụ (giống phần dưới của ảnh mẫu) */
+.gal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.gcard{position:relative;border-radius:22px;padding:16px;min-height:132px;background:linear-gradient(155deg,#2a234f 0%,#181332 65%,#4d3f8c 100%);color:#f4f2ff;border:1.5px solid rgba(255,255,255,.45);box-shadow:var(--sh-sm);cursor:pointer;text-align:left;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:transform .15s}
+.gcard:hover{transform:translateY(-3px)}
+.gcard::before{content:"";position:absolute;right:-20px;top:-20px;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(186,174,255,.42),transparent 70%);pointer-events:none}
+.gcard small{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bcb4ee}
+.gcard b{font-family:var(--display);font-size:15px;font-weight:800;display:block;margin-top:3px;padding-right:34px}
+.gcard span.sub{font-size:12px;color:#d2ccf6;font-weight:600}
+.gcard .arr{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:11px;background:var(--surface);color:var(--accent-dk);display:grid;place-items:center;box-shadow:var(--clay);font-weight:900}
+
+.acts{display:flex;flex-direction:column}
+.act{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-dk);background:none;border-left:0;border-right:0;border-top:0;text-align:left;cursor:pointer;width:100%}
+.act:last-child{border-bottom:0}
+.act .ti{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--accent);color:#fff;box-shadow:var(--clay)}
+.act .mt{flex:1;min-width:0}
+.act .mt b{display:block;font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act .mt span{font-size:12px;color:var(--muted);font-weight:700}
+.act .tm{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.empty{color:var(--muted);font-weight:700;font-size:13.5px;padding:18px 0;text-align:center}
+
+.next{position:relative;border-radius:22px;padding:20px;min-height:210px;background:linear-gradient(145deg,#352d61,#1e183b 62%,#5b4e9e);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;box-shadow:var(--sh-sm),inset 0 2px 0 rgba(255,255,255,.28);border:1.5px solid rgba(255,255,255,.35)}
+.next .big{position:absolute;right:-6px;top:-6px;width:130px;height:130px;opacity:.9}
+.next small{font-weight:800;color:#cfc8fa;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+.next h4{font-size:20px;font-weight:800;margin:4px 0;padding-right:52px}
+.next p{margin:0;font-weight:600;color:#ded9fa;font-size:13px;padding-right:52px}
+.next .play{position:absolute;right:16px;bottom:16px;width:48px;height:48px;border-radius:16px;border:1.5px solid #fff;background:var(--surface);color:var(--accent-dk);display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 20px -8px rgba(0,0,0,.7)}
+.next .nb{height:7px;background:rgba(255,255,255,.22);border-radius:99px;overflow:hidden;margin-top:10px;max-width:72%}
+.next .nb i{display:block;height:100%;background:#dcd6ff;border-radius:99px}
+
+.banner{margin-top:16px;border-radius:26px;padding:16px 20px;background:linear-gradient(100deg,#3d3468,#2b244f);color:#fff;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--sh),inset 0 2px 0 rgba(255,255,255,.25);border:1.5px solid rgba(255,255,255,.32)}
+.banner .ti{width:50px;height:50px;border-radius:16px;background:var(--surface);color:#156847;display:grid;place-items:center;flex:none;box-shadow:var(--clay)}
+.banner .ti .ic{width:26px;height:26px}
+.banner .mt{flex:1;min-width:200px}
+.banner b{font-size:16px;font-weight:800;display:block}
+.banner span{font-size:13px;font-weight:600;color:#ded9fa}
+.banner .btn{background:var(--surface);color:var(--accent-dk)}
+.banner .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.38)}
+
+/* ===== chặng ===== */
+.sbanner{border-radius:28px;padding:22px 26px;background:linear-gradient(130deg,var(--panel-dk),#2b244f 70%,#554994);color:#fff;display:flex;gap:22px;align-items:center;box-shadow:var(--sh),inset 0 2px 0 rgba(255,255,255,.25);border:1.5px solid rgba(255,255,255,.35);position:relative;overflow:hidden}
+.sbanner .sbt{flex:1;min-width:0;position:relative;z-index:1}
+.sbanner .eyebrow{background:rgba(255,255,255,.16);color:#e4dfff;border-color:rgba(255,255,255,.3)}
+.sbanner .bg{position:absolute;right:120px;bottom:-35px;opacity:.14;color:#fff}
+.sbanner .bg .ic{width:180px;height:180px;stroke-width:1.4}
+.stg-h{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;margin:8px 0 6px;color:#fff}
+.goal{color:#d8d2f8;font-size:15px;font-weight:600;max-width:64ch;margin:0}
+.ring{width:100px;height:100px;border-radius:50%;flex:none;display:grid;place-items:center;position:relative;z-index:1;box-shadow:var(--sh-sm);border:2px solid rgba(255,255,255,.55)}
+.ring::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--panel-dk)}
+.ring span{position:relative;z-index:1;text-align:center;line-height:1.1;font-weight:800;font-size:19px;color:#fff}
+.ring span small{display:block;font-size:11px;color:#cbc5f0;font-weight:700}
+.ring.ico{background:rgba(255,255,255,.14);color:#fff}
+.ring.ico::after{display:none}
+.ring.ico .ic{width:42px;height:42px;position:relative;z-index:1}
+
+.sec{display:flex;flex-direction:column;gap:18px;margin-top:20px;max-width:980px}
+.txt{max-width:74ch;background:var(--surface);border:1.5px solid rgba(255,255,255,.55);border-radius:24px;padding:18px 22px;box-shadow:var(--sh-sm),var(--clay)}
+.txt p{margin:0 0 10px}
+.txt p:last-child{margin-bottom:0}
+.txt h2{font-size:20px;font-weight:800;margin:8px 0 8px;display:flex;align-items:center;gap:10px;color:var(--accent-dk)}
+.txt h2:first-child{margin-top:0}
+.txt h2::before{content:"✦";display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;flex:none}
+.txt ul,.txt ol{margin:0 0 10px;padding-left:22px}
+.txt li{margin-bottom:5px}
+.tbl{overflow-x:auto;border:1.5px solid rgba(255,255,255,.55);border-radius:22px;background:var(--surface);box-shadow:var(--sh-sm),var(--clay)}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px;min-width:480px}
+.tbl th{background:var(--panel-dk);text-align:left;font-weight:800;color:#fff}
+.tbl th code{background:rgba(255,255,255,.18);color:#fff}
+.tbl th,.tbl td{padding:10px 14px;border-bottom:1px solid var(--line-dk);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.note{border-left:5px solid var(--accent);background:rgba(67,58,115,.14);padding:12px 16px;border-radius:0 16px 16px 0;max-width:72ch;font-weight:600}
+.note p{margin:0}
+.cap{font-size:12.5px;color:var(--muted);margin:6px 0 0;font-weight:600}
+.treebox{background:var(--surface);border:1.5px solid rgba(255,255,255,.55);border-radius:24px;padding:18px;box-shadow:var(--sh-sm),var(--clay)}
+svg.tree{width:100%;max-width:680px;height:auto;display:block;margin:0 auto}
+svg.tree .nd{fill:#dcd6fb;stroke:#433a73;stroke-width:1.8}
+svg.tree .nd.hot{fill:#433a73;stroke:#fff;stroke-width:2}
+svg.tree text{fill:#1e193b;font-family:var(--mono);font-size:12.5px;text-anchor:middle;dominant-baseline:middle;font-weight:700}
+svg.tree text.inv{fill:#ffffff}
+svg.tree .ln{stroke:#3c3368;stroke-width:1.8;fill:none}
+svg.tree .ar{fill:#3c3368;stroke:#3c3368;stroke-width:1.5}
+
+/* code */
+.code{background:var(--code-bg);color:var(--code-fg);border:1.5px solid rgba(255,255,255,.38);border-radius:20px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.65;padding:12px 0;box-shadow:var(--sh-sm),inset 0 2px 8px rgba(0,0,0,.35)}
+.code-in{width:max-content;min-width:100%}
+.cl{display:flex;white-space:pre;padding:0 14px;min-width:100%}
+button.cl{width:100%;border:0;background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+button.cl:hover{background:rgba(255,255,255,.08)}
+.cl .no{width:2.4em;flex:none;text-align:right;margin-right:14px;color:var(--c);user-select:none}
+.cl.mk{background:rgba(255,212,121,.18);box-shadow:inset 4px 0 0 #ffd479}
+.cl.cur{background:rgba(255,212,121,.22);box-shadow:inset 4px 0 0 #ffd479}
+.cl.err{background:rgba(255,120,145,.24);box-shadow:inset 4px 0 0 #ff7891}
+.cl.sel{background:rgba(166,152,245,.28);box-shadow:inset 4px 0 0 #b8aef8}
+.cl.hit{background:rgba(110,231,183,.22);box-shadow:inset 4px 0 0 #6ee7b7}
+.cl.fp{background:rgba(255,120,145,.26);box-shadow:inset 4px 0 0 #ff7891}
+.cl.miss{background:rgba(255,212,121,.25);box-shadow:inset 4px 0 0 #ffd479}
+.k{color:var(--k);font-weight:600}.t{color:var(--t)}.s{color:var(--s)}.c{color:var(--c);font-style:italic}.a{color:var(--a)}.n{color:var(--n)}
+
+/* thẻ bài tập */
+.ex{border:1.5px solid rgba(255,255,255,.58);background:var(--surface);border-radius:26px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:var(--sh-sm),var(--clay)}
+.exh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tag{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--panel-dk);border-radius:999px;padding:4px 13px;border:1px solid rgba(255,255,255,.35)}
+.st{font-size:12px;color:var(--muted);font-weight:800;border-radius:999px;padding:3px 11px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.55)}
+.st.ok{color:var(--ok);background:var(--ok-soft)}.st.rv{color:var(--warn);background:var(--warn-soft)}
+.q{font-weight:700;max-width:72ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid rgba(255,255,255,.65);background:linear-gradient(180deg,#53488d,#393068);color:#fff;border-radius:999px;padding:9px 20px;font-weight:800;cursor:pointer;font-size:14.5px;box-shadow:0 10px 18px -10px rgba(18,12,48,.75),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.25);transition:transform .12s,filter .12s;text-decoration:none}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none;transform:none}
+.btn .ic{width:17px;height:17px}
+.btn.ghost{background:rgba(255,255,255,.55);color:var(--accent-dk);border:1.5px solid rgba(255,255,255,.75);box-shadow:var(--sh-sm)}
+.btn.ghost:hover{background:#fff}
+.btn.sm{padding:6px 14px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.conf{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:700}
+.cf{border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.45);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:12.5px;font-weight:700}
+.cf[aria-pressed="true"]{background:var(--panel-dk);border-color:#fff;color:#fff;font-weight:800}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;border:1.5px solid rgba(255,255,255,.65);background:rgba(255,255,255,.52);border-radius:16px;padding:10px 14px;cursor:pointer;min-width:0;font-weight:600;transition:all .12s}
+.opt:hover:not(:disabled){background:rgba(255,255,255,.82);transform:translateX(2px)}
+.opt .lt{flex:none;font-family:var(--mono);font-weight:700;font-size:13px;width:26px;height:26px;border-radius:9px;background:var(--panel-dk);color:#fff;display:grid;place-items:center}
+.opt .tx{min-width:0;overflow-wrap:anywhere;padding-top:1px}
+.opt pre{margin:0;font-family:var(--mono);font-size:13px;white-space:pre-wrap}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)}
+.opt.good .lt{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft);opacity:.88}
+.opt.bad .lt{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.fb{font-size:14.5px;max-width:72ch;border-radius:14px;padding:10px 14px;font-weight:600}
+.fb.ok{color:var(--ok);background:var(--ok-soft)}.fb.bad{color:var(--bad);background:var(--bad-soft)}.fb .ex-t{color:var(--fg)}
+.fb:empty{display:none}
+.hint{background:var(--warn-soft);color:var(--warn);border-radius:14px;padding:9px 14px;font-size:14px;max-width:72ch;font-weight:600}
+.hint::before{content:"💡 "}
+.hints{display:flex;flex-direction:column;gap:6px}
+.hints:empty{display:none}
+.tri{display:flex;flex-direction:column;gap:10px;border-top:2px dashed var(--line-dk);padding-top:14px}
+.tri:first-of-type{border-top:0;padding-top:0}
+.ch{border:1.5px solid rgba(255,255,255,.65);background:rgba(255,255,255,.52);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:13.5px;font-weight:800}
+.ch:hover:not(:disabled){background:#fff}
+.ch.good{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.ch.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.ch:disabled{cursor:default}
+input.bl{font-family:var(--mono);font-size:13px;background:#fff;color:#1e193b;border:2px solid #b8aef8;border-radius:7px;padding:1px 6px;margin:0 2px;width:9ch;min-width:0;font-weight:700}
+input.bl.ok{border-color:#26a269;background:#c7eedd}
+input.bl.bad{border-color:#c01c28;background:#f7ccd5}
+.pl{display:flex;align-items:center;gap:10px;border:1.5px solid rgba(255,255,255,.35);background:var(--code-bg);color:var(--code-fg);border-radius:14px;padding:6px 8px 6px 14px;font-family:var(--mono);font-size:13px;white-space:pre;overflow-x:auto}
+.pl .tx{flex:1;min-width:0}
+.pl.good{border-color:#6ee7b7;box-shadow:inset 4px 0 0 #6ee7b7}
+.pl.bad{border-color:#ff7891;box-shadow:inset 4px 0 0 #ff7891}
+.pls{display:flex;flex-direction:column;gap:6px}
+.mv{display:flex;gap:4px;flex:none}
+.mv button{border:1px solid rgba(255,255,255,.4);background:var(--surface);border-radius:9px;width:30px;height:28px;cursor:pointer;font-size:14px;line-height:1;color:var(--accent-dk);font-weight:900}
+.mv button:disabled{opacity:.35;cursor:default}
+.bugl{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.bugl li{border-left:4px solid var(--ok);background:var(--ok-soft);border-radius:0 14px 14px 0;padding:8px 12px;font-size:14px}
+.bugl li.m{border-color:var(--warn);background:var(--warn-soft)}
+
+/* chạy từng bước */
+.tr{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:12px;align-items:start}
+.pn{border:1px solid var(--line-dk);border-radius:16px;background:rgba(255,255,255,.48);padding:9px 12px;margin-bottom:10px}
+.pn:last-child{margin-bottom:0}
+.pn h4{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.stk{display:flex;flex-direction:column;gap:4px}
+.fr{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line-dk);border-radius:9px;padding:3px 8px;background:rgba(255,255,255,.75);overflow-wrap:anywhere}
+.fr.top{border-color:var(--warn);background:var(--hl)}
+.lys{display:flex;flex-direction:column;gap:5px}
+.ly{border:1.5px dashed var(--line-dk);border-radius:10px;padding:4px 8px;font-family:var(--mono);font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.55)}
+.ly b{color:var(--fg);font-weight:700}
+.ly.run{border:1.5px solid var(--warn);background:var(--hl);color:var(--fg)}
+.ly.done{border:1.5px solid var(--ok);background:var(--ok-soft);color:var(--fg)}
+.ly.fail{border:1.5px solid var(--bad);background:var(--bad-soft);color:var(--fg)}
+.ly .fd{display:block;margin-top:2px;font-size:12px}
+.ly .pv{font-family:var(--body);font-size:10.5px;border:1px solid var(--line-dk);border-radius:5px;padding:0 4px;margin-left:5px;color:var(--muted)}
+.vt{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+.vt th{font-family:var(--body);font-size:11px;color:var(--muted);text-align:left;font-weight:800;padding:0 6px 3px 0}
+.vt td{padding:2px 6px 2px 0;overflow-wrap:anywhere}
+.con{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:6px 8px;min-height:2.6em;white-space:pre-wrap;overflow-wrap:anywhere}
+.con .e{color:#ff8fa3}
+.con i{color:var(--c)}
+.stepnote{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:10px 14px;font-size:14px;min-height:3.4em;font-weight:600}
+.cnt{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto;font-weight:800}
+
+/* phòng thí nghiệm */
+.lab{display:grid;gap:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.sg{border:1.5px solid rgba(255,255,255,.65);background:rgba(255,255,255,.5);border-radius:12px;padding:6px 12px;cursor:pointer;font-family:var(--mono);font-size:12.5px;font-weight:600}
+.sg[aria-pressed="true"]{border-color:#fff;background:var(--panel-dk);font-weight:700;color:#fff}
+.lab h4{margin:0 0 6px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.res{border-radius:14px;padding:10px 14px;font-size:14.5px}
+.res.ok{background:var(--ok-soft);border-left:4px solid var(--ok)}
+.res.cerr{background:var(--bad-soft);border-left:4px solid var(--bad)}
+.res.rerr{background:var(--warn-soft);border-left:4px solid var(--warn)}
+.res strong{display:block;margin-bottom:2px}
+
+/* tổng kết */
+.tp{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) auto;gap:12px;align-items:center;font-size:14px;font-weight:700;padding:5px 0}
+.tp .bw{height:12px;background:rgba(44,36,84,.18);border-radius:999px;overflow:hidden;padding:2px}
+.tp .bw i{display:block;height:100%;background:linear-gradient(90deg,#6e62b5,#393068);border-radius:999px}
+.tp span.v{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12.5px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.bdg{border-radius:20px;padding:14px;text-align:center;background:var(--surface);border:1.5px solid rgba(255,255,255,.65);box-shadow:var(--sh-sm),var(--clay);font-weight:800;font-size:14px}
+.bdg .em{font-size:32px;display:block;line-height:1.2}
+.bdg small{display:block;font-size:11.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.bdg.off{opacity:.55;filter:grayscale(.85)}
+.errs{margin:0;padding-left:20px}
+.errs li{margin-bottom:6px}
+textarea.rp{width:100%;min-height:150px;font-family:var(--mono);font-size:12.5px;background:var(--code-bg);color:var(--code-fg);border:1px solid var(--line);border-radius:14px;padding:10px}
+
+/* điều hướng, đăng nhập, thông báo */
+.pnav{display:flex;justify-content:space-between;gap:10px;margin-top:30px;flex-wrap:wrap;max-width:980px}
+#login{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;place-items:center;padding:16px;overflow-y:auto;
+  background-image:
+    radial-gradient(2px 2px at 18% 22%,rgba(255,255,255,.65),transparent),
+    radial-gradient(2px 2px at 80% 30%,rgba(255,255,255,.55),transparent),
+    radial-gradient(900px 500px at 10% 0%,rgba(164,151,236,.4),transparent 60%),
+    radial-gradient(850px 580px at 95% 100%,rgba(34,26,72,.75),transparent 60%)}
+.lgbox{width:100%;max-width:940px;display:grid;grid-template-columns:1.05fr 1fr;background:linear-gradient(145deg,var(--panel-hi),var(--panel));border-radius:36px;overflow:hidden;box-shadow:var(--sh),inset 0 2px 0 rgba(255,255,255,.45);border:1.5px solid rgba(255,255,255,.42)}
+.lgart{background:linear-gradient(160deg,#3b3267,#231c44 65%,#574b96);position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:520px;padding:28px;color:#fff;overflow:hidden}
+.lgart .art{width:240px;height:240px;margin:auto}
+.lgart-tx{position:relative;z-index:1;padding:14px 18px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(8px)}
+.lgart-tx b{display:block;font-size:17px;font-weight:800}
+.lgart-tx span{font-size:13px;font-weight:600;color:#ded9fa}
+.lg{display:flex;flex-direction:column;gap:12px;padding:34px 36px;background:var(--surface)}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:19px;color:var(--fg)}
+.logo .lt{width:40px;height:40px;border-radius:13px;background:linear-gradient(160deg,#5b4ea0,#393068);display:grid;place-items:center;color:#fff;box-shadow:var(--clay)}
+.logo b{color:var(--accent-dk)}
+.lg h1{font-size:clamp(26px,3.6vw,34px);font-weight:800;letter-spacing:-.02em}
+.lg p{margin:0;color:var(--muted);font-weight:600;font-size:14.5px}
+.fld{display:flex;flex-direction:column;gap:5px;font-size:13.5px;font-weight:800}
+.fld span{color:var(--muted);font-weight:600}
+.fld input{font:inherit;font-weight:600;font-size:15.5px;background:rgba(255,255,255,.78);color:#1e193b;border:1.5px solid rgba(67,58,115,.35);border-radius:14px;padding:10px 14px;width:100%}
+.fld input:focus{border-color:var(--accent-dk);outline:none;background:#fff}
+.err{color:var(--bad);font-size:13.5px;min-height:1.3em;font-weight:700}
+.lgbtn{padding:12px 20px;font-size:15.5px}
+.okline{display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:12px;padding:8px 12px}
+.okline:empty{display:none}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:70;background:linear-gradient(180deg,#483e7b,#2b244f);color:#fff;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:10px 22px;font-size:14px;font-weight:800;max-width:calc(100vw - 32px);box-shadow:0 16px 32px -10px rgba(12,8,34,.8)}
+
+@media (max-width:1100px){.stats,.gal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr}}
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr);padding:12px;gap:12px}
+  .side{position:fixed;left:12px;top:12px;bottom:12px;height:auto;width:270px;transform:translateX(calc(-100% - 24px));transition:transform .25s}
+  body.nav-open .side{transform:none}
+  #menuBtn{display:grid}
+  .main{padding:18px 16px 36px;border-radius:28px}
+  .dgrid,.tr{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .lgbox{grid-template-columns:1fr}
+  .lgart{min-height:240px}
+  .lg{padding:24px 22px}
+  .top .pill.tm,.top .pill.xp{display:none}
+  .sbanner{padding:20px;flex-direction:column;align-items:flex-start}
+  .ring{width:84px;height:84px}
+}
+@media (max-width:560px){.tp{grid-template-columns:1fr auto}.tp .bw{grid-column:1/-1;order:3}.stat .vl{font-size:24px}.top h1{font-size:18px}.sync .tx{display:none}.gal-grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="shell" id="app" hidden>
+  <aside class="side" id="side" aria-label="Thanh điều hướng">
+    <div class="prof">
+      <div class="avatar" id="pfAv" aria-hidden="true">?</div>
+      <div class="hi" id="pfHi">Xin chào!</div>
+      <div class="id" id="pfId"></div>
+    </div>
+    <div class="sprog" aria-label="Tiến độ tổng">
+      <div class="r"><span>Hành trình Vũ trụ</span><span id="pct">0%</span></div>
+      <div class="bw"><i id="bar"></i></div>
+    </div>
+    <nav class="nav" id="nav" aria-label="Các chặng"></nav>
+    <div class="promo" id="promo">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <defs>
+            <radialGradient id="gPlanet" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#d2caf8"/><stop offset="100%" stop-color="#6b5fb0"/></radialGradient>
+            <linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9e93e0"/></linearGradient>
+          </defs>
+          <ellipse cx="60" cy="64" rx="50" ry="16" fill="none" stroke="url(#gRing)" stroke-width="8" transform="rotate(-18 60 64)" opacity=".55"/>
+          <circle cx="60" cy="60" r="28" fill="url(#gPlanet)"/>
+          <path d="M20 74a50 16 0 0 0 80 -20" fill="none" stroke="url(#gRing)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="92" cy="26" r="4" fill="#ffd479"/>
+          <circle cx="24" cy="32" r="2.5" fill="#fff"/>
+        </svg>
+      </div>
+      <b id="prT">Boss: Bug Zoo</b>
+      <p id="prP">Săn 6 lỗi kinh điển trong CourseManager!</p>
+      <button class="btn sm" type="button" id="prB">Khám phá ↓</button>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div class="main">
+    <header class="top hdwrap">
+      <button class="round" id="menuBtn" type="button" aria-label="Mở menu" data-ic="menu"></button>
+      <div class="ttl"><h1 id="pgT">Tổng quan</h1><div class="sub" id="pgS"></div></div>
+      <button class="pill sync" id="sync" type="button" title="Trạng thái đồng bộ Google Sheet"><span class="dot"></span><span class="tx" id="syncTx">Google Sheet</span></button>
+      <span class="pill xp" title="Điểm kinh nghiệm" data-ic="zap">XP <b id="xp">0</b></span>
+      <span class="pill tm" title="Tổng thời gian học" data-ic="clock"><b id="clk">00:00</b></span>
+      <button class="round" id="thm" type="button" aria-label="Đổi giao diện sáng tối"></button>
+      <button class="round uavatar" id="usr" type="button" aria-expanded="false" aria-controls="umenu" aria-label="Tài khoản"></button>
+      <div id="umenu" hidden></div>
+    </header>
+    <main id="stage" tabindex="-1" style="outline:none"></main>
+  </div>
+</div>
+
+<div id="login" hidden>
+  <div class="lgbox">
+    <div class="lgart">
+      <div class="hero-tag">JAVA COLLECTIONS · GALAXY EDITION</div>
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 220 220">
+          <defs>
+            <radialGradient id="lgSuit" cx="35%" cy="28%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="60%" stop-color="#dcd6fa"/><stop offset="100%" stop-color="#8b80c9"/></radialGradient>
+            <linearGradient id="lgVisor" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4e438a"/><stop offset="100%" stop-color="#191433"/></linearGradient>
+            <linearGradient id="lgRocket" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="65%" stop-color="#cbc3f4"/><stop offset="100%" stop-color="#6e63b0"/></linearGradient>
+          </defs>
+          <circle cx="38" cy="48" r="18" fill="url(#lgSuit)" opacity=".85"/>
+          <ellipse cx="38" cy="48" rx="30" ry="8" fill="none" stroke="#dcd6fa" stroke-width="4" transform="rotate(-22 38 48)"/>
+          <g transform="translate(130,115) rotate(-28)">
+            <path d="M22 6 C36 24 36 56 22 74 C8 56 8 24 22 6 Z" fill="url(#lgRocket)"/>
+            <path d="M10 54 L2 68 L14 64 Z M34 54 L42 68 L30 64 Z" fill="#5e52a0"/>
+            <circle cx="22" cy="36" r="7" fill="url(#lgVisor)" stroke="#fff" stroke-width="2.5"/>
+            <path d="M16 74 Q22 92 28 74 Z" fill="#ffd479"/>
+          </g>
+          <g transform="translate(46,48)">
+            <rect x="26" y="66" width="56" height="62" rx="24" fill="url(#lgSuit)"/>
+            <rect x="6" y="72" width="24" height="42" rx="12" transform="rotate(-28 18 93)" fill="url(#lgSuit)"/>
+            <rect x="78" y="68" width="24" height="42" rx="12" transform="rotate(24 90 89)" fill="url(#lgSuit)"/>
+            <rect x="30" y="118" width="20" height="34" rx="10" fill="url(#lgSuit)"/>
+            <rect x="58" y="118" width="20" height="34" rx="10" fill="url(#lgSuit)"/>
+            <circle cx="54" cy="44" r="34" fill="url(#lgSuit)"/>
+            <rect x="30" y="28" width="48" height="30" rx="15" fill="url(#lgVisor)"/>
+            <ellipse cx="44" cy="36" rx="8" ry="3.5" fill="#fff" opacity=".55" transform="rotate(-12 44 36)"/>
+            <rect x="38" y="82" width="32" height="22" rx="6" fill="#5a4f99" stroke="#fff" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+      <div class="lgart-tx"><b>Khám phá Vũ trụ Collections 🚀</b><span id="lgInfo">7 chặng · ArrayList · HashMap · Exception</span></div>
+    </div>
+    <form class="lg" id="lgf" novalidate>
+      <div class="logo"><span class="lt" data-ic="layers"></span><span>Collections<b>.java</b></span></div>
+      <div class="eyebrow">Java OOP · Cosmic Bento UI</div>
+      <h1>ArrayList &amp; HashMap</h1>
+      <p>Nhập thông tin để <strong>điểm danh</strong> và khởi hành. Tiến độ làm bài được lưu theo MSSV và đồng bộ Google Sheet.</p>
+      <label class="fld" for="lg-name">Họ và tên<input id="lg-name" type="text" autocomplete="name" placeholder="Nguyễn Văn An"></label>
+      <label class="fld" for="lg-id">MSSV<input id="lg-id" type="text" autocomplete="off" autocapitalize="characters" placeholder="SV001"></label>
+      <label class="fld" for="lg-lop">Lớp <span>(không bắt buộc)</span><input id="lg-lop" type="text" autocomplete="off" placeholder="CNTT-K18"></label>
+      <div class="err" id="lg-err" role="alert"></div>
+      <button class="btn lgbtn" type="submit">Điểm danh &amp; Khởi hành →</button>
+      <div class="okline" id="lg-sync"></div>
+    </form>
+  </div>
+</div>
+<div id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ================= cấu hình ================= */
+// Dán URL Web App của Google Apps Script dành riêng cho buổi Collections vào SHEET_URL
+// (hoặc bấm nút "Chưa nối Sheet" trên góc phải giao diện để dán trực tiếp).
+var CONFIG={
+  SHEET_URL:'https://script.google.com/macros/s/AKfycbzzCh7RA3WxENXbzbobvPFjrXo5c0BYFGDgum71x-vE_39qoSApsb8COZNhlsiODatS/exec',
+  COURSE:'Java Collections (ArrayList, HashMap)',
+  SESSION:'Java OOP · 180 phút'
+};
+
+/* ================= tiện ích ================= */
+var mem={};
+var store={
+  get:function(k){try{var v=localStorage.getItem(k);return v==null?(mem[k]==null?null:mem[k]):v}catch(e){return mem[k]==null?null:mem[k]}},
+  set:function(k,v){mem[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
+};
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(s){
+  return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+}
+function h(tag,props){
+  var e=document.createElement(tag);
+  if(props){for(var k in props){var v=props[k];if(v==null||v===false)continue;
+    if(k==='class')e.className=v;
+    else if(k==='html')e.innerHTML=v;
+    else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);
+    else e.setAttribute(k,v===true?'':v);}}
+  var kids=Array.prototype.slice.call(arguments,2);
+  (function add(list){list.forEach(function(c){
+    if(c==null||c===false)return;
+    if(Array.isArray(c))return add(c);
+    e.append(c.nodeType?c:document.createTextNode(c));
+  })})(kids);
+  return e;
+}
+function seeded(str){
+  var x=2166136261;for(var i=0;i<str.length;i++){x^=str.charCodeAt(i);x=Math.imul(x,16777619)}
+  x=x|0||1;
+  return function(){x^=x<<13;x^=x>>>17;x^=x<<5;return ((x>>>0)%100000)/100000};
+}
+
+/* ================= tô màu cú pháp Java ================= */
+var KW={};'class extends super this new return public private protected static final void if else throw throws int double boolean instanceof for while null true false try catch finally long char abstract interface implements import package'.split(' ').forEach(function(w){KW[w]=1});
+function hlLine(s){
+  var re=/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(@\w+)|(\b\d[\d_]*(?:\.\d+)?(?:[EeLlDdFf]\d*)?\b)|([A-Za-z_]\w*)|([\s\S])/g,out='',m;
+  while((m=re.exec(s))){
+    if(m[1])out+='<span class="c">'+esc(m[1])+'</span>';
+    else if(m[2])out+='<span class="s">'+esc(m[2])+'</span>';
+    else if(m[3])out+='<span class="a">'+esc(m[3])+'</span>';
+    else if(m[4])out+='<span class="n">'+esc(m[4])+'</span>';
+    else if(m[5]){var w=m[5];out+=KW[w]?'<span class="k">'+w+'</span>':(/^[A-Z]/.test(w)?'<span class="t">'+w+'</span>':esc(w))}
+    else out+=esc(m[6]);
+  }
+  return out;
+}
+function codeEl(code,o){
+  o=o||{};
+  var lines=code.replace(/\n$/,'').split('\n');
+  var inner=h('div',{class:'code-in'});
+  var rows=lines.map(function(t,i){
+    var row=h(o.interactive?'button':'div',{class:'cl',type:o.interactive?'button':null,'aria-pressed':o.interactive?'false':null});
+    row.append(h('span',{class:'no'},String(i+1)),h('span',{class:'tx',html:hlLine(t)||' '}));
+    if(o.mark&&o.mark.indexOf(i+1)>=0)row.classList.add('mk');
+    inner.append(row);return row;
+  });
+  return {el:h('div',{class:'code'},inner),rows:rows,lines:lines};
+}
+
+/* ================= nội dung bài giảng: Java Collections (ArrayList, HashMap, Exception) ================= */
+function L(n,s,f){return {n:n,s:s,f:f||[]}}
+
+var CODE_INTRO=`// 1. Luôn khai báo bằng interface, khởi tạo bằng implementation (đa hình)
+List<String> names = new ArrayList<>();
+Map<String, Integer> scores = new HashMap<>();
+
+// 2. Generics đưa lỗi kiểu từ lúc chạy về lúc biên dịch
+List raw = new ArrayList();          // Raw type — KHÔNG dùng!
+raw.add("abc");
+raw.add(123);
+// String s = (String) raw.get(1);   // Ném ClassCastException lúc chạy!
+
+// 3. Wrapper class & bẫy bộ nhớ đệm Integer (-128..127)
+Integer a = 127, b = 127;
+Integer c = 1000, d = 1000;
+System.out.println(a == b);          // true  (nằm trong Integer cache -128..127)
+System.out.println(c == d);          // false (2 object khác nhau ngoài cache!)
+System.out.println(c.equals(d));     // true  (luôn dùng equals để so giá trị)`;
+
+var CODE_AL_CRUD=`List<String> fruits = new ArrayList<>();
+// Create (Thêm)
+fruits.add("Apple");                 // thêm cuối -> [Apple]
+fruits.add("Banana");                // -> [Apple, Banana]
+fruits.add(1, "Mango");              // chèn tại index 1 -> [Apple, Mango, Banana]
+
+// Read (Đọc)
+String first = fruits.get(0);        // "Apple" — O(1)
+int sz = fruits.size();              // 3
+boolean has = fruits.contains("Mango"); // true — O(n)
+
+// Update (Sửa)
+String old = fruits.set(0, "Green Apple"); // trả về phần tử CŨ ("Apple")
+
+// Delete (Xóa)
+fruits.remove("Mango");              // xóa theo giá trị (phần tử đầu tiên khớp)
+fruits.remove(0);                    // xóa theo chỉ số (index 0)`;
+
+var T1_CODE=`List<Integer> nums = new ArrayList<>(List.of(10, 20, 30, 1, 2));
+nums.remove(1);
+nums.remove(Integer.valueOf(1));
+System.out.println(nums);`;
+var T1=[
+  {l:1,st:['main'],v:[['nums','List<Integer>','[10, 20, 30, 1, 2]']],ly:[L('ArrayList (size = 5)','done',[['[0]','10'],['[1]','20'],['[2]','30'],['[3]','1'],['[4]','2']])],note:'Khởi tạo `ArrayList` có 5 phần tử: chỉ số `0..4` chứa `10, 20, 30, 1, 2`.'},
+  {l:2,st:['main','remove(int index)'],v:[['nums','List<Integer>','[10, 30, 1, 2]']],ly:[L('ArrayList (size = 4)','run',[['[0]','10'],['[1]','30 (dồn lên)'],['[2]','1'],['[3]','2']])],note:'Bẫy kinh điển! Đối số `1` là kiểu `int` nguyên thủy nên Java gọi `remove(int index)` → xóa phần tử **tại vị trí index 1** (là số `20`), chứ không phải xóa số `1`!'},
+  {l:3,st:['main','remove(Object o)'],v:[['nums','List<Integer>','[10, 30, 2]']],ly:[L('ArrayList (size = 3)','run',[['[0]','10'],['[1]','30'],['[2]','2 (dồn lên)']])],note:'`Integer.valueOf(1)` truyền đối tượng `Integer`, nên Java gọi `remove(Object o)` → tìm và xóa **giá trị `1`** (ở index 2).'},
+  {l:4,st:['main'],v:[['nums','List<Integer>','[10, 30, 2]']],ly:[L('ArrayList (size = 3)','done',[['[0]','10'],['[1]','30'],['[2]','2']])],out:'[10, 30, 2]',note:'Kết quả in ra `[10, 30, 2]`. Nhớ kỹ: với `List<Integer>`, `remove(1)` xóa index `1`, còn `remove(Integer.valueOf(1))` mới xóa giá trị `1`.'}
+];
+
+var T2_CODE=`List<Integer> list = new ArrayList<>(List.of(1, 2, 3, 4));
+for (Integer n : list) {
+    if (n % 2 == 0) {
+        list.remove(n);
+    }
+}`;
+var T2=[
+  {l:1,st:['main'],v:[['list.modCount','int','0']],ly:[L('list : ArrayList','done',[['elementData','[1, 2, 3, 4]'],['modCount','0']])],note:'Tạo `ArrayList` với `modCount = 0` (biến đếm số lần thay đổi cấu trúc thêm/xóa của danh sách).'},
+  {l:2,st:['main','iterator.next() -> 1'],v:[['list.modCount','int','0'],['it.expectedModCount','int','0'],['n','Integer','1']],ly:[L('Iterator','done',[['cursor','1'],['expectedModCount','0']])],note:'Vòng `for-each` tạo một `Iterator` ngầm ghi nhớ `expectedModCount = 0`. Lần lặp 1: `n = 1` (số lẻ, không xóa).'},
+  {l:2,st:['main','iterator.next() -> 2'],v:[['list.modCount','int','0'],['it.expectedModCount','int','0'],['n','Integer','2']],ly:[L('Iterator','done',[['cursor','2'],['expectedModCount','0']])],note:'Lần lặp 2: `it.next()` kiểm tra `modCount == expectedModCount` (`0 == 0` OK) và trả về `n = 2`.'},
+  {l:4,st:['main','list.remove(Integer 2)'],v:[['list.modCount','int','1'],['it.expectedModCount','int','0']],ly:[L('list : ArrayList','run',[['elementData','[1, 3, 4]'],['modCount','1 (đã tăng!)']])],note:'Gọi trực tiếp `list.remove(n)` không qua Iterator: phần tử `2` bị xóa và `list.modCount` tăng lên `1`, trong khi `it.expectedModCount` vẫn là `0`!'},
+  {l:2,st:['main','iterator.next()'],v:[['list.modCount','int','1'],['it.expectedModCount','int','0']],ly:[L('Iterator.checkForComodification()','fail',[['modCount (1) != expectedModCount (0)','FAIL']])],err:'ConcurrentModificationException',note:'Sang vòng lặp tiếp theo, `it.next()` phát hiện `modCount (1) != expectedModCount (0)` → ném ngay `ConcurrentModificationException` (cơ chế fail-fast)! Cách sửa: dùng `list.removeIf(n -> n % 2 == 0)` hoặc `it.remove()`.'}
+];
+
+var CODE_AL_ADV=`// 1. Ba cách xóa phần tử an toàn khi duyệt
+list.removeIf(n -> n % 2 == 0);                 // Cách 1 (Java 8+): gọn nhất
+for (Iterator<Integer> it = list.iterator(); it.hasNext(); ) {
+    if (it.next() % 2 == 0) it.remove();        // Cách 2: xóa qua Iterator
+}
+
+// 2. Sắp xếp với Comparator (nhiều tiêu chí)
+students.sort(
+    Comparator.comparingDouble(Student::getGpa).reversed()
+              .thenComparing(Student::getName)
+);
+
+// 3. Bẫy danh sách bất biến (List.of) và kích thước cố định (Arrays.asList)
+List<String> imm = List.of("A", "B");           // Bất biến: add/set/remove -> UnsupportedOperationException
+List<String> fixed = Arrays.asList("A", "B");   // set(0,"Z") OK, nhưng add/remove -> UnsupportedOperationException`;
+
+var CODE_HM_BASIC=`Map<String, Integer> scores = new HashMap<>();
+scores.put("An", 8);
+scores.put("Binh", 9);
+Integer old = scores.put("An", 10);             // trùng key -> ghi đè, trả về giá trị CŨ (8)
+
+int s1 = scores.getOrDefault("An", 0);          // 10
+int s2 = scores.getOrDefault("Zed", 0);         // 0 (tránh NullPointerException khi unboxing!)
+
+// Duyệt chuẩn nhất khi cần cả key và value: dùng entrySet()
+for (Map.Entry<String, Integer> e : scores.entrySet()) {
+    System.out.println(e.getKey() + " -> " + e.getValue());
+}
+
+// Đếm tần suất từ cực gọn với merge
+Map<String, Integer> freq = new HashMap<>();
+for (String w : "java is fun and java is powerful".split(" ")) {
+    freq.merge(w, 1, Integer::sum);
+}`;
+
+var T3_CODE=`class Point {
+    private final int x, y;
+    Point(int x, int y) { this.x = x; this.y = y; }
+    // QUÊN override equals() và hashCode()!
+}
+Map<Point, String> map = new HashMap<>();
+map.put(new Point(1, 2), "Kho báu");
+String kq = map.get(new Point(1, 2));
+System.out.println(kq);`;
+var T3=[
+  {l:6,st:['main'],ly:[L('HashMap (16 buckets)','done',[['[0..15]','trống']])],note:'Khởi tạo `HashMap` với mảng bảng băm mặc định gồm 16 bucket (`0..15`).'},
+  {l:7,st:['main','map.put(p1, "Kho báu")'],v:[['p1','Point','@10a (x=1,y=2)']],ly:[L('Bucket [5]','run',[['entry','Point@10a -> "Kho báu"']])],note:'`new Point(1, 2)` thứ nhất tạo `Point@10a`. Vì không override `hashCode()`, Java lấy mã băm theo địa chỉ bộ nhớ (giả sử rơi vào **Bucket [5]**) và lưu `"Kho báu"`.'},
+  {l:8,st:['main','map.get(p2)'],v:[['p1','Point','@10a (x=1,y=2)'],['p2','Point','@9f4 (x=1,y=2)']],ly:[L('Bucket [5]','done',[['entry','Point@10a -> "Kho báu"']]),L('Bucket [12] (tra cứu p2)','fail',[['kết quả','trống -> null']])],note:'`new Point(1, 2)` thứ hai là object mới `@9f4` nên `Object.hashCode()` khác hẳn (rơi vào **Bucket [12]**). Kể cả nếu trùng bucket, `Object.equals()` vẫn so sánh `==` địa chỉ nên thấy `@10a != @9f4`!'},
+  {l:9,st:['main'],v:[['kq','String','null']],ly:[L('Kết quả tra cứu','fail',[['kq','null (mất dấu "Kho báu"!)']])],out:'null',note:'In ra **`null`** dù tọa độ cùng là `(1, 2)`! Bài học: mọi class dùng làm key trong `HashMap`/`HashSet` **bắt buộc phải override cả `equals()` lẫn `hashCode()`** và các trường tham gia phải bất biến (`final`).'}
+];
+
+var CODE_EX=`public class StudentManager {
+    private final List<Student> students = new ArrayList<>();
+
+    public void add(Student s) {
+        if (s == null) {
+            throw new IllegalArgumentException("Student không được null");
+        }
+        if (findById(s.getId()).isPresent()) {
+            throw new IllegalStateException("Mã SV đã tồn tại: " + s.getId());
+        }
+        students.add(s);
+    }
+
+    public Student getOrThrow(String id) {
+        return students.stream()
+            .filter(s -> s.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("Không tìm thấy: " + id));
+    }
+
+    // Phòng thủ khi trả collection ra ngoài: KHÔNG trả trực tiếp list nội bộ!
+    public List<Student> getStudents() {
+        return Collections.unmodifiableList(students);
+    }
+}`;
+
+var BOSS_CODE=`public class CourseManager {
+    private List<Student> students = new ArrayList<>();
+    private Map<String, Integer> credits = new HashMap<>();
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void addStudent(Student s) {
+        if (s == null) System.out.println("Student bị null");
+        students.add(s);
+    }
+
+    public void removeFailing() {
+        for (Student s : students) {
+            if (s.getGpa() < 2.0) students.remove(s);
+        }
+    }
+
+    public int getCreditOf(String id) {
+        return credits.get(id);
+    }
+
+    public static void main(String[] args) {
+        List<String> tags = List.of("OOP", "Collections");
+        tags.add("Java");
+        List<Integer> ids = new ArrayList<>(List.of(10, 20, 1));
+        ids.remove(1); // Kỳ vọng: xóa sinh viên có mã số 1
+    }
+}`;
+
+var STAGES=[
+{id:'tong-quan',tab:'Tổng quan & Generics',min:20,title:'Tổng quan Collections Framework & Generics',goal:'Hiểu vì sao cần Collections thay cho mảng cố định, sơ đồ phân cấp List / Set / Queue / Map, Generics và bẫy Wrapper.',blocks:[
+  {k:'md',html:'<p>Mảng thường (<code>T[]</code>) có kích thước cố định và không có sẵn các hàm thêm, xóa, tìm kiếm. <strong>Java Collections Framework</strong> cung cấp các cấu trúc dữ liệu co giãn tự động cùng bộ thuật toán chuẩn hóa.</p>'},
+  {k:'html',html:'<div class="tbl"><table><thead><tr><th>Tiêu chí</th><th>Mảng <code>T[]</code></th><th><code>ArrayList&lt;T&gt;</code></th></tr></thead><tbody><tr><td>Kích thước</td><td>Cố định sau khi khởi tạo</td><td><strong>Tự co giãn</strong> theo số phần tử</td></tr><tr><td>Kiểu nguyên thủy</td><td>Lưu trực tiếp (<code>int[]</code>, <code>double[]</code>)</td><td>Không — phải dùng Wrapper (<code>Integer</code>, <code>Double</code>)</td></tr><tr><td>Thêm / xóa / tìm</td><td>Phải tự viết thủ công</td><td>Có sẵn <code>add</code>, <code>remove</code>, <code>contains</code>, <code>sort</code>…</td></tr><tr><td>Độ dài &amp; truy cập</td><td><code>arr.length</code> · <code>arr[i]</code></td><td><code>list.size()</code> · <code>list.get(i)</code></td></tr></tbody></table></div>'},
+  {k:'md',html:'<h2>Sơ đồ phân cấp Collections Framework</h2><p>Điểm cực kỳ quan trọng khi đi phỏng vấn: <strong><code>Map&lt;K,V&gt;</code> KHÔNG kế thừa <code>Collection&lt;E&gt;</code></strong> vì <code>Collection</code> lưu từng phần tử đơn lẻ, còn <code>Map</code> lưu theo cặp <code>key → value</code>.</p>'},
+  {k:'tree'},
+  {k:'md',html:'<h2>Lập trình hướng Interface, Generics &amp; Autoboxing</h2>'},
+  {k:'code',code:CODE_INTRO,mark:[2,3,12,13,14,15]},
+  {k:'quiz',id:'s0-q1',topic:'overview',tag:'Lập trình hướng Interface',q:'Vì sao nên khai báo `List<String> names = new ArrayList<>();` thay vì `ArrayList<String> names = new ArrayList<>();`?',options:['Vì `List` chạy nhanh hơn `ArrayList` gấp 2 lần','Vì Java cấm khai báo biến bằng tên class `ArrayList`','Để code phụ thuộc vào abstraction (`List`), dễ dàng đổi sang `LinkedList` hoặc nhận mọi loại `List` qua tham số hàm (đa hình)','Để cho phép lưu cả số nguyên `int` vào danh sách'],correct:2,explain:'Khai báo theo interface (`List`, `Map`) giúp tách rời code sử dụng khỏi cài đặt cụ thể (`ArrayList`, `HashMap`) — đúng tinh thần đa hình và giảm phụ thuộc trong OOP.',hints:['Nếu một hàm nhận tham số `List<String>`, nó có nhận được cả `ArrayList`, `LinkedList` và `List.of(...)` không?']},
+  {k:'quiz',id:'s0-q2',topic:'overview',tag:'Bẫy Wrapper & Autoboxing',q:'Đoạn code sau in ra gì?\n`Integer x = 127, y = 127;`\n`Integer m = 200, n = 200;`\n`System.out.println((x == y) + " " + (m == n) + " " + m.equals(n));`',options:['true true true','true false true','false false true','Lỗi biên dịch'],correct:1,explain:'Java cache sẵn các đối tượng `Integer` trong đoạn `-128..127` nên `x == y` cùng trỏ 1 object (`true`). Ngoài khoảng đó (`200`), mỗi lần autoboxing tạo object mới nên `m == n` là `false`. Luôn dùng `.equals()` để so sánh giá trị Wrapper!',hints:['Toán tử `==` trên hai biến đối tượng `Integer` so sánh giá trị hay địa chỉ tham chiếu?']},
+  {k:'triage',id:'s0-tri',topic:'overview',title:'Đoạn khai báo / thao tác sau hợp lệ hay lỗi?',
+    choices:[{id:'compile',label:'Lỗi biên dịch'},{id:'runtime',label:'Lỗi lúc chạy'},{id:'ok',label:'Chạy bình thường'}],
+    items:[
+      {code:'List<int> nums = new ArrayList<>();',answer:'compile',why:'Generics trong Java không nhận kiểu nguyên thủy (`int`). Phải dùng lớp bao `List<Integer>`.'},
+      {code:'List raw = new ArrayList();\nraw.add("Java");\nraw.add(2026);\nString s = (String) raw.get(1);',answer:'runtime',why:'Dùng raw type bỏ qua kiểm tra kiểu lúc biên dịch; phần tử thứ 2 là `Integer` nên ép sang `String` ném `ClassCastException` lúc chạy.'},
+      {code:'List<Integer> list = new ArrayList<>();\nlist.add(null);\nint x = list.get(0);',answer:'runtime',why:'`list.get(0)` trả về `null`; khi tự động mở hộp (unboxing) `Integer -> int` sẽ ném `NullPointerException`.'},
+      {code:'Map<String, Integer> scores = new HashMap<>();\nscores.put("An", 10);',answer:'ok',why:'Chuẩn: khai báo bằng interface `Map`, dùng diamond `<>` và autoboxing `10` thành `Integer`.'}
+    ]}
+]},
+
+{id:'arraylist-co-ban',tab:'ArrayList cơ bản',min:25,title:'ArrayList cơ bản: Khởi tạo, CRUD, Duyệt & Độ phức tạp',goal:'Nắm chắc các thao tác thêm, đọc, sửa, xóa trên ArrayList và độ phức tạp Big-O của từng thao tác.',blocks:[
+  {k:'md',html:'<p><code>ArrayList&lt;E&gt;</code> là cấu trúc danh sách được dùng nhiều nhất trong thực tế. Bên dưới nó là một mảng <code>Object[]</code> tự động nhân ~1.5 lần sức chứa mỗi khi đầy.</p>'},
+  {k:'code',code:CODE_AL_CRUD},
+  {k:'md',html:'<h2>Độ phức tạp thời gian (Big-O) trên ArrayList</h2>'},
+  {k:'html',html:'<div class="tbl"><table><thead><tr><th>Thao tác</th><th>Độ phức tạp</th><th>Giải thích</th></tr></thead><tbody><tr><td><code>get(i)</code>, <code>set(i, e)</code></td><td><strong>O(1)</strong></td><td>Truy cập trực tiếp ô nhớ thứ <code>i</code> của mảng nền</td></tr><tr><td><code>add(e)</code> (vào cuối)</td><td><strong>O(1) amortized</strong></td><td>Ghi thẳng vào cuối mảng; thỉnh thoảng mới phải cấp phát mảng mới lớn hơn</td></tr><tr><td><code>add(i, e)</code>, <code>remove(i)</code></td><td><strong>O(n)</strong></td><td>Phải dồn toàn bộ các phần tử phía sau sang phải hoặc sang trái</td></tr><tr><td><code>contains(e)</code>, <code>indexOf(e)</code></td><td><strong>O(n)</strong></td><td>Quét tuần tự từ đầu danh sách và so sánh bằng <code>equals()</code></td></tr></tbody></table></div>'},
+  {k:'md',html:'<h2>Bẫy phỏng vấn kinh điển: remove(int) vs remove(Object)</h2>'},
+  {k:'quiz',id:'s1-q1',topic:'al_basic',tag:'Dự đoán kết quả',q:'Cho đoạn code sau, kết quả in ra màn hình là gì?',code:T1_CODE,options:['[10, 20, 30, 2]','[10, 30, 2]','[20, 30, 2]','IndexOutOfBoundsException'],correct:1,explain:'`nums.remove(1)` nhận `int` nên xóa phần tử ở **index 1** (số `20`). Còn `nums.remove(Integer.valueOf(1))` nhận `Object` nên xóa **giá trị `1`**. Xem từng bước ở trình mô phỏng bên dưới!',hints:['Chữ ký của hai hàm quá tải trong `List<E>` là `remove(int index)` và `remove(Object o)`.']},
+  {k:'trace',id:'t1',title:'Chạy từng bước: Phân biệt remove(int) và remove(Integer.valueOf)',code:T1_CODE,steps:T1},
+  {k:'triage',id:'s1-tri',topic:'al_basic',title:'Chọn độ phức tạp hoặc kết quả đúng cho từng thao tác trên ArrayList có n phần tử:',
+    choices:[{id:'o1',label:'O(1) — Tức thì'},{id:'on',label:'O(n) — Tuyến tính'},{id:'err',label:'Ném IndexOutOfBoundsException'}],
+    items:[
+      {text:'Truy cập phần tử ở giữa danh sách bằng `list.get(n / 2)`.',answer:'o1',why:'`ArrayList` dùng mảng liên tiếp trong bộ nhớ nên tính địa chỉ ô thứ `i` chỉ mất `O(1)`.'},
+      {text:'Chèn một phần tử vào đầu danh sách bằng `list.add(0, x)`.',answer:'on',why:'Chèn vào vị trí `0` bắt buộc phải dịch toàn bộ `n` phần tử hiện có sang phải 1 ô → `O(n)`.'},
+      {text:'Gọi `list.get(list.size())` để lấy phần tử cuối cùng.',answer:'err',why:'Chỉ số hợp lệ của danh sách là từ `0` đến `size() - 1`. Gọi `get(size())` luôn ném `IndexOutOfBoundsException`!'},
+      {text:'Kiểm tra sự tồn tại bằng `list.contains("SV99")` trên danh sách chưa sắp xếp.',answer:'on',why:'`contains` phải duyệt tuần tự từ đầu tới cuối và gọi `equals()` trên từng phần tử → `O(n)`.'}
+    ]}
+]},
+
+{id:'arraylist-nang-cao',tab:'ArrayList nâng cao',min:30,title:'ArrayList nâng cao: Xóa khi duyệt, Sắp xếp, Stream & Bất biến',goal:'Làm chủ cơ chế fail-fast (modCount), Comparator, Optional/Stream và tránh bẫy UnsupportedOperationException.',blocks:[
+  {k:'md',html:'<p>Khi duyệt <code>ArrayList</code> bằng vòng lặp <code>for-each</code> mà lại gọi <code>list.remove(...)</code> hoặc <code>list.add(...)</code> trực tiếp, Java sẽ lập tức ném <strong><code>ConcurrentModificationException</code></strong>. Hãy xem cơ chế <code>modCount</code> hoạt động bên dưới:</p>'},
+  {k:'trace',id:'t2',title:'Chạy từng bước: Vì sao xóa trong for-each gây ConcurrentModificationException?',code:T2_CODE,steps:T2},
+  {k:'code',code:CODE_AL_ADV},
+  {k:'quiz',id:'s2-q1',topic:'al_adv',tag:'Comparable vs Comparator',q:'Khi cài đặt `compareTo` hoặc `Comparator` để sắp xếp theo số nguyên hoặc số thực, vì sao **không nên** viết `return a.getAge() - b.getAge();` hoặc `return (int)(a.getGpa() - b.getGpa());`?',options:['Vì phép trừ không biên dịch được trong Java','Vì phép trừ có thể bị tràn số (overflow) với số lớn hoặc mất phần thập phân khi ép `(int)` — hãy dùng `Integer.compare(a, b)` / `Double.compare(a, b)`','Vì phép trừ luôn sắp xếp ngược thứ tự','Vì `Comparator` bắt buộc trả về kiểu `boolean`'],correct:1,explain:'Ví dụ `(int)(3.8 - 3.2)` bị cắt thành `0` (coi như bằng nhau!), hoặc `Integer.MIN_VALUE - 10` bị tràn số thành dương. Luôn dùng `Integer.compare(a, b)` và `Double.compare(a, b)`.',hints:['Nếu `a.gpa = 3.8` và `b.gpa = 3.2`, hiệu `3.8 - 3.2 = 0.6` khi ép sang `(int)` sẽ thành mấy?']},
+  {k:'parsons',id:'s2-pars',topic:'al_adv',intro:'Sắp xếp các dòng để hoàn thiện đoạn xóa tất cả số chẵn trong `list` một cách an toàn bằng `Iterator` (không bị `ConcurrentModificationException`).',lines:[
+    'Iterator<Integer> it = list.iterator();',
+    'while (it.hasNext()) {',
+    '    Integer n = it.next();',
+    '    if (n % 2 == 0) {',
+    '        it.remove();',
+    '    }',
+    '}'],explain:'Phải gọi `it.next()` để lấy phần tử trước, sau đó nếu thỏa điều kiện thì gọi `it.remove()` (chứ không gọi `list.remove(n)`).',hints:['Trong vòng `while (it.hasNext())`, phải gọi `it.next()` trước khi kiểm tra `n % 2 == 0` và gọi `it.remove()`.']},
+  {k:'triage',id:'s2-tri',topic:'al_adv',title:'Đoạn code dưới đây chạy được hay ném ngoại lệ nào?',
+    choices:[{id:'ok',label:'Chạy bình thường'},{id:'uoe',label:'UnsupportedOperationException'},{id:'npe',label:'NullPointerException'},{id:'cme',label:'ConcurrentModificationException'}],
+    items:[
+      {code:'List<String> fixed = List.of("A", "B", "C");\nfixed.add("D");',answer:'uoe',why:'`List.of(...)` trả về danh sách **bất biến (immutable)**, mọi thao tác `add`, `set`, `remove` đều ném `UnsupportedOperationException`.'},
+      {code:'List<String> view = Arrays.asList("A", "B");\nview.set(0, "Z");',answer:'ok',why:'`Arrays.asList` có kích thước cố định (không `add`/`remove` được), nhưng **cho phép `set(i, v)`** để sửa phần tử tại chỗ!'},
+      {code:'List<String> view = Arrays.asList("A", "B");\nview.add("C");',answer:'uoe',why:'`Arrays.asList` chỉ là lớp vỏ bọc trên mảng cố định nên gọi `add` hoặc `remove` sẽ ném `UnsupportedOperationException`.'},
+      {code:'List<String> items = List.of("A", null);',answer:'npe',why:'`List.of` và `Map.of` (Java 9+) **không chấp nhận phần tử `null`** và ném `NullPointerException` ngay khi tạo.'},
+      {code:'List<Integer> nums = new ArrayList<>(List.of(1, 2, 3, 4));\nList<Integer> sub = nums.subList(1, 3);\nnums.add(99);\nSystem.out.println(sub.get(0));',answer:'cme',why:'`subList` chỉ là một **view** nhìn vào `nums` gốc. Khi thay đổi cấu trúc `nums` (`nums.add(99)`) rồi dùng lại `sub`, nó sẽ ném `ConcurrentModificationException`.'}
+    ]}
+]},
+
+{id:'hashmap-co-ban',tab:'HashMap cơ bản',min:30,title:'HashMap cơ bản: Key–Value, Duyệt & Đếm tần suất',goal:'Biến phép tìm kiếm tuần tự O(n) trên List thành tra cứu tức thì O(1) với HashMap<K,V>.',blocks:[
+  {k:'md',html:'<p><code>HashMap&lt;K,V&gt;</code> lưu trữ dữ liệu theo cặp <strong><code>key → value</code></strong>. Mỗi <code>key</code> là duy nhất (nếu <code>put</code> trùng key sẽ ghi đè value cũ và trả về value cũ); tìm kiếm theo key mất trung bình <strong>O(1)</strong>. Thứ tự các phần tử khi duyệt <code>HashMap</code> là <strong>không xác định</strong>.</p>'},
+  {k:'code',code:CODE_HM_BASIC,mark:[4,7,10,16]},
+  {k:'quiz',id:'s3-q1',topic:'hm_basic',tag:'Đọc hiểu put & getOrDefault',q:'Chạy đoạn code sau sẽ in ra gì?\n`Map<String, Integer> m = new HashMap<>();`\n`m.put("An", 8);`\n`Integer old = m.put("An", 10);`\n`m.putIfAbsent("An", 5);`\n`System.out.println(old + " - " + m.get("An") + " - " + m.getOrDefault("Binh", 0));`',options:['8 - 10 - 0','10 - 5 - null','null - 10 - 0','8 - 5 - 0'],correct:0,explain:'Lần `put("An", 10)` ghi đè lên `8` và trả về giá trị cũ `old = 8`. `putIfAbsent("An", 5)` thấy key `"An"` đã có nên bỏ qua, giá trị vẫn là `10`. `"Binh"` chưa có nên `getOrDefault` trả `0`.',hints:['`put(k, v)` khi key đã tồn tại trả về giá trị cũ hay giá trị mới?']},
+  {k:'quiz',id:'s3-q2',topic:'hm_basic',tag:'Null trong HashMap',q:'Nếu `map.get("S01")` trả về `null`, ta có thể kết luận chắc chắn rằng key `"S01"` không tồn tại trong `HashMap` không?',options:['Chắc chắn 100%, vì HashMap không cho phép lưu giá trị null','Không chắc: có thể chưa có key `"S01"`, hoặc key `"S01"` tồn tại nhưng được gán value là `null`. Phải dùng `map.containsKey("S01")` để phân biệt','Chỉ xảy ra khi HashMap đang rỗng','Sẽ ném NullPointerException chứ không bao giờ trả về null'],correct:1,explain:'`HashMap` cho phép **1 key `null`** và **nhiều value `null`**. Do đó `get(k) == null` có 2 khả năng; muốn biết chắc key có mặt hay không phải gọi `containsKey(k)` (hoặc dùng `getOrDefault`).',hints:['`HashMap` có cho phép `map.put("S01", null)` không?']},
+  {k:'fill',id:'s3-fill',topic:'hm_basic',intro:'Điền tên phương thức còn thiếu để đếm tần suất xuất hiện của từng từ trong câu mà không bị `NullPointerException` ở lần gặp đầu tiên.',code:`Map<String, Integer> freq = new HashMap<>();
+for (String w : text.split(" ")) {
+    int count = freq.{{a}}(w, 0);
+    freq.{{b}}(w, count + 1);
+}
+
+// Duyệt cả key và value hiệu quả nhất (không phải tra cứu lại get(k)):
+for (Map.Entry<String, Integer> e : freq.{{c}}()) {
+    System.out.println(e.getKey() + " = " + e.getValue());
+}`,blanks:{a:{re:'^getOrDefault$',w:14},b:{re:'^put$',w:6},c:{re:'^entrySet$',w:10}},explain:'Dùng `freq.getOrDefault(w, 0)` lấy số đếm hiện tại (hoặc `0` nếu từ mới xuất hiện), rồi `freq.put(w, count + 1)`. Khi duyệt cả key và value, luôn dùng `entrySet()` thay vì `keySet()`.',hints:['Hàm nào của `Map` trả về giá trị mặc định khi không tìm thấy key?','Hàm nào trả về tập các cặp `Map.Entry<K,V>`?']}
+]},
+
+{id:'hashmap-nang-cao',tab:'HashMap nâng cao',min:30,title:'HashMap nâng cao: Bucket, Collision & Hợp đồng equals/hashCode',goal:'Hiểu cấu trúc bảng băm bên trong HashMap, giải thích vì sao override equals phải đi kèm hashCode, và chọn đúng HashMap / LinkedHashMap / TreeMap.',blocks:[
+  {k:'md',html:'<p>Khi gọi <code>map.put(key, value)</code>, điều gì thật sự diễn ra bên trong <code>HashMap</code>?</p><ol><li>Gọi <code>key.hashCode()</code> rồi trộn bit (spread) để phân bố đều.</li><li>Tính chỉ số ngăn chứa (bucket): <code>index = (n - 1) &amp; hash</code> (mặc định bảng có <code>n = 16</code> bucket).</li><li>Nếu bucket trống → đặt node mới vào. Nếu bucket đã có phần tử (<strong>đụng độ — collision</strong>) → so sánh từng node trong bucket bằng <code>hash</code> rồi <code>key.equals(k)</code>: trùng key thì ghi đè value, khác key thì nối vào danh sách liên kết.</li><li>Từ Java 8: nếu 1 bucket có từ <strong>8 phần tử trở lên</strong> (và bảng &ge; 64), danh sách liên kết tự chuyển thành <strong>cây đỏ-đen (Red-Black Tree)</strong> giúp trường hợp xấu nhất giảm từ <code>O(n)</code> xuống <strong><code>O(log n)</code></strong>.</li><li>Khi số phần tử vượt <code>capacity × loadFactor</code> (<code>16 × 0.75 = 12</code>) → nhân đôi bảng và phân phối lại (rehash).</li></ol>'},
+  {k:'trace',id:'t3',title:'Chạy từng bước: Thảm họa khi dùng Object làm key mà quên equals/hashCode',code:T3_CODE,steps:T3},
+  {k:'md',html:'<h2>So sánh 3 biến thể của Map</h2>'},
+  {k:'html',html:'<div class="tbl"><table><thead><tr><th>Loại Map</th><th>Thứ tự khi duyệt</th><th>Độ phức tạp</th><th>Khi nào nên chọn?</th></tr></thead><tbody><tr><td><code>HashMap&lt;K,V&gt;</code></td><td>Không đảm bảo thứ tự</td><td><strong>O(1)</strong></td><td>Mặc định trong 90% bài toán cần tốc độ tra cứu</td></tr><tr><td><code>LinkedHashMap&lt;K,V&gt;</code></td><td>Giữ đúng <strong>thứ tự chèn</strong> (hoặc thứ tự truy cập — LRU Cache)</td><td><strong>O(1)</strong></td><td>Cần tra cứu nhanh nhưng in ra theo đúng thứ tự thêm vào</td></tr><tr><td><code>TreeMap&lt;K,V&gt;</code></td><td>Tự động <strong>sắp xếp theo Key</strong></td><td><strong>O(log n)</strong></td><td>Cần duyệt theo thứ tự key, hoặc tìm <code>firstKey()</code>, <code>subMap()</code></td></tr></tbody></table></div>'},
+  {k:'md',html:'<h2>Phòng thí nghiệm: Thử nghiệm các tình huống với Map</h2>'},
+  {k:'castlab'},
+  {k:'triage',id:'s4-tri',topic:'hm_adv',title:'Chọn cấu trúc hoặc đánh giá đúng cho từng tình huống:',
+    choices:[{id:'hm',label:'Hợp lệ / Chuẩn'},{id:'bug',label:'Lỗi logic (mất khả năng tra cứu)'},{id:'npe',label:'Lỗi NullPointerException'}],
+    items:[
+      {code:'Map<String, List<String>> groups = new HashMap<>();\ngroups.get("CNTT").add("An");',answer:'npe',why:'Lần đầu tiên key `"CNTT"` chưa có trong map nên `groups.get("CNTT")` trả về `null` → gọi `.add("An")` ném `NullPointerException`. Sửa bằng: `groups.computeIfAbsent("CNTT", k -> new ArrayList<>()).add("An");`.'},
+      {code:'// Class Key chỉ override equals(), KHÔNG override hashCode()\nMap<Key, String> m = new HashMap<>();\nm.put(new Key("A"), "1");\nSystem.out.println(m.get(new Key("A")));',answer:'bug',why:'Vi phạm hợp đồng `equals`/`hashCode`: hai object bằng nhau theo `equals` nhưng có `hashCode` khác nhau sẽ rơi vào 2 bucket khác nhau, khiến `m.get(...)` trả về `null`.'},
+      {code:'Map<Key, String> m = new HashMap<>();\nKey k = new Key("A");\nm.put(k, "1");\nk.setName("B"); // sửa trường tham gia tính hashCode sau khi đã put!\nSystem.out.println(m.get(k));',answer:'bug',why:'Sau khi `k.setName("B")`, `hashCode` của `k` đổi sang giá trị mới nên `m.get(k)` tìm ở bucket mới, trong khi entry cũ vẫn nằm ở bucket cũ → entry bị "mồ côi", trả về `null`! Key của Map luôn nên là bất biến.'},
+      {code:'Map<String, List<String>> groups = new HashMap<>();\ngroups.computeIfAbsent("CNTT", k -> new ArrayList<>()).add("An");',answer:'hm',why:'Chuẩn Java 8+: `computeIfAbsent` tự tạo `ArrayList` mới nếu chưa có key `"CNTT"`, rồi trả về list đó để `.add("An")`.'}
+    ]}
+]},
+
+{id:'ngoai-le',tab:'Ngoại lệ & Phòng thủ',min:25,title:'Ném, Bắt Ngoại lệ & Bảo vệ tính Đóng gói của Collection',goal:'Chọn đúng loại Exception để throw ở Guard Clause, viết Custom Exception và không làm lộ Collection nội bộ.',blocks:[
+  {k:'md',html:'<p>Làm việc với Collections chuyên nghiệp đòi hỏi 2 lớp phòng thủ: <strong>(1) Kiểm tra đầu vào sớm (Fail-Fast / Guard Clause)</strong> và ném đúng loại ngoại lệ; <strong>(2) Không bao giờ trả trực tiếp tham chiếu <code>List</code>/<code>Map</code> nội bộ ra ngoài getter</strong>.</p>'},
+  {k:'html',html:'<div class="tbl"><table><thead><tr><th>Tình huống lỗi</th><th>Ngoại lệ chuẩn cần ném (<code>throw new ...</code>)</th></tr></thead><tbody><tr><td>Tham số truyền vào không hợp lệ (số âm, chuỗi rỗng…)</td><td><code>IllegalArgumentException</code></td></tr><tr><td>Tham số bị <code>null</code></td><td><code>IllegalArgumentException</code> hoặc <code>Objects.requireNonNull(x, "...")</code></td></tr><tr><td>Trạng thái hiện tại không cho phép (trùng mã SV, kho đã khóa…)</td><td><code>IllegalStateException</code> (hoặc Custom Exception như <code>DuplicateStudentException</code>)</td></tr><tr><td>Tìm kiếm theo mã không thấy</td><td><code>NoSuchElementException</code></td></tr><tr><td>Chỉ số nằm ngoài <code>0 .. size() - 1</code></td><td><code>IndexOutOfBoundsException</code></td></tr><tr><td>Thao tác sửa trên view chỉ đọc</td><td><code>UnsupportedOperationException</code></td></tr></tbody></table></div>'},
+  {k:'code',code:CODE_EX,mark:[5,6,8,9,18,23]},
+  {k:'quiz',id:'s5-q1',topic:'exception',tag:'Đóng gói Collection',q:'Trong class `Course` có `private final List<Student> students = new ArrayList<>();`, vì sao viết `public List<Student> getStudents() { return students; }` là một lỗi đóng gói nghiêm trọng?',options:['Vì `private final` không cho phép trả về trong getter','Vì bên ngoài gọi `course.getStudents().clear()` hoặc `.add(...)` sẽ sửa thẳng vào danh sách nội bộ của `Course` mà không qua bất kỳ kiểm tra nào!','Vì nó làm tốn gấp đôi bộ nhớ Heap','Vì `ArrayList` không thể ép kiểu thành `List`'],correct:1,explain:'Từ khóa `private` chỉ chặn gán lại biến `students`, còn khi getter trả về chính tham chiếu `students`, bên ngoài toàn quyền xóa sạch hoặc chèn dữ liệu rác. Phải trả về `Collections.unmodifiableList(students)` hoặc `List.copyOf(students)`.',hints:['Biến `List` trả về từ getter trỏ tới đâu trên Heap?']},
+  {k:'parsons',id:'s5-pars',topic:'exception',intro:'Sắp xếp các khối `try / catch / finally` đúng quy tắc của Java (bắt ngoại lệ con cụ thể trước, ngoại lệ cha `RuntimeException` sau, `finally` ở cuối).',lines:[
+    'try {',
+    '    Student s = manager.getOrThrow(id);',
+    '} catch (NoSuchElementException e) {',
+    '    System.err.println("Không tìm thấy: " + e.getMessage());',
+    '} catch (RuntimeException e) {',
+    '    System.err.println("Lỗi hệ thống khác: " + e.getMessage());',
+    '} finally {',
+    '    System.out.println("Hoàn tất tra cứu");',
+    '}'],explain:'`NoSuchElementException` là lớp con của `RuntimeException`, nên phải đặt khối `catch (NoSuchElementException e)` **trước** `catch (RuntimeException e)`. Nếu đảo ngược, trình biên dịch báo lỗi `exception has already been caught`.',hints:['Giữa `NoSuchElementException` và `RuntimeException`, lớp nào là con, lớp nào là cha?']},
+  {k:'fill',id:'s5-fill',topic:'exception',intro:'Hoàn thiện Custom Exception `DuplicateStudentException` (kế thừa `RuntimeException`) và phương thức `getStudents()` trả về danh sách chỉ đọc.',code:`public class DuplicateStudentException {{a}} RuntimeException {
+    public DuplicateStudentException(String id) {
+        {{b}}("Sinh viên đã tồn tại: " + id);
+    }
+}
+
+public List<Student> getStudents() {
+    return Collections.{{c}}(students);
+}`,blanks:{a:{re:'^extends$',w:9},b:{re:'^super$',w:7},c:{re:'^unmodifiableList$',w:18}},explain:'Custom unchecked exception dùng `extends RuntimeException`, truyền thông điệp lỗi lên lớp cha bằng `super(...)`, và bọc danh sách trả về bằng `Collections.unmodifiableList(students)`.',hints:['Từ khóa kế thừa trong Java là gì?','Phương thức nào của `Collections` tạo view chỉ đọc cho một `List`?']}
+]},
+
+{id:'boss',tab:'Boss: Bug Zoo',min:25,title:'Boss cuối: Săn 6 lỗi kinh điển trong CourseManager',goal:'Rà soát một lớp quản lý khóa học dùng cả ArrayList lẫn HashMap và bắt trọn 6 chiếc bẫy nguy hiểm nhất.',blocks:[
+  {k:'md',html:'<p>Chào mừng bạn đến với thử thách <strong>Bug Zoo</strong>! Lớp <code>CourseManager</code> dưới đây tổng hợp <strong>6 lỗi thực tế hay gặp nhất</strong> khi lập trình với <code>ArrayList</code>, <code>HashMap</code> và xử lý ngoại lệ. Hãy bấm vào tất cả các dòng có lỗi rồi bấm Kiểm tra.</p>'},
+  {k:'bug',id:'boss-bug',topic:'boss',intro:'Tìm đủ 6 lỗi trong đoạn code dưới đây (chọn nhầm dòng không lỗi sẽ bị tô đỏ).',code:BOSS_CODE,bugs:[
+    {lines:[6],why:'Lộ trực tiếp tham chiếu `students` nội bộ ra ngoài getter! Bên ngoài có thể gọi `getStudents().clear()`. Phải trả về `Collections.unmodifiableList(students)` hoặc `List.copyOf(students)`.'},
+    {lines:[10,11],why:'Khi `s == null` chỉ in cảnh báo rồi vẫn `students.add(s)` ở dòng 11, làm `null` lọt vào danh sách và gây `NullPointerException` ở `removeFailing()`. Phải `throw new IllegalArgumentException(...)`.'},
+    {lines:[16],why:'Gọi `students.remove(s)` ngay bên trong vòng lặp `for-each` sẽ ném `ConcurrentModificationException`. Phải dùng `students.removeIf(s -> s.getGpa() < 2.0)`.'},
+    {lines:[21],why:'`credits.get(id)` trả về `Integer` có thể là `null` khi không tìm thấy `id`. Ép tự động (unboxing) về kiểu trả về `int` sẽ ném `NullPointerException`! Phải dùng `credits.getOrDefault(id, 0)`.'},
+    {lines:[26],why:'`tags` được tạo bằng `List.of(...)` (danh sách bất biến), nên gọi `tags.add("Java")` sẽ ném `UnsupportedOperationException`.'},
+    {lines:[28],why:'Trên `List<Integer>`, `ids.remove(1)` xóa phần tử tại **chỉ số index 1** (là số `20`) chứ không xóa giá trị `1`. Muốn xóa số `1` phải viết `ids.remove(Integer.valueOf(1))`.'}
+  ],hints:['Có 1 lỗi lộ danh sách ở `getStudents()`, 1 lỗi không ném ngoại lệ ở `addStudent()`, 1 lỗi xóa trong `for-each`, 1 lỗi unboxing `null` ở `getCreditOf()`, và 2 lỗi trong `main`.']},
+  {k:'quiz',id:'boss-q',topic:'boss',tag:'Câu chốt hạ',q:'Trong bài tập lớn **Hệ thống quản lý sinh viên**, cần vừa **tra cứu sinh viên theo mã `id` trong thời gian O(1)**, vừa **in bảng xếp hạng theo GPA giảm dần**, và **khi truyền danh sách sinh viên của lớp ra ngoài không ai sửa trộm được**. Tổ hợp thiết kế nào dưới đây là chuẩn nhất?',options:['Chỉ dùng 1 mảng `Student[]` cố định 100 phần tử cho mọi việc','Dùng `Map<String, Student>` làm kho chính để tra cứu theo mã `O(1)`; khi cần báo cáo xếp hạng thì đổ `new ArrayList<>(map.values())` rồi `.sort(Comparator.comparingDouble(Student::getGpa).reversed())`; getter trả về `List.copyOf(...)` / `Collections.unmodifiableList(...)`','Dùng `TreeMap<Student, String>` không cần cài `Comparable` và trả thẳng `map` ra ngoài','Dùng raw type `ArrayList` và xóa phần tử bằng vòng lặp `for-each`'],correct:1,explain:'Kết hợp hoàn hảo sức mạnh của cả hai cấu trúc: `HashMap<String, Student>` cho phép thêm/xóa/tìm theo mã `O(1)`, `ArrayList<Student>` phục vụ sắp xếp linh hoạt theo nhiều tiêu chí với `Comparator`, và `List.copyOf` / `unmodifiableList` bảo vệ tính đóng gói.',hints:['Cấu trúc nào tìm theo mã `id` trong `O(1)`? Cấu trúc nào hỗ trợ `.sort(Comparator)`?']}
+]},
+
+{id:'tong-ket',tab:'Tổng kết & Cheat Sheet',min:10,title:'Tổng kết, Cheat Sheet & Mini Project',goal:'Nhìn lại toàn bộ tiến độ, bảng tóm tắt nhanh (Cheat Sheet) và yêu cầu Mini Project.',blocks:[
+  {k:'summary'}
+]}
+];
+
+/* ================= biểu tượng ================= */
+var ICONS={
+  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
+  rocket:'<path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.9A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0"/><path d="M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/>',
+  tree:'<circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/><path d="M12 12v3"/>',
+  box:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/>',
+  refresh:'<path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M3 21v-5h5"/>',
+  shuffle:'<path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="m4 4 5 5"/>',
+  lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  crown:'<path d="m2 7 5 4 5-7 5 7 5-4-2 12H4z"/><path d="M4 19h16"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M8 16v-5"/><path d="M13 16V8"/><path d="M18 16v-3"/>',
+  zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
+  play:'<path d="M8 5v14l11-7z"/>',
+  download:'<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+  copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
+  layers:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  send:'<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>'
+};
+function ic(n,c){return '<svg class="ic'+(c?' '+c:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||'')+'</svg>'}
+function icon(n,c){var t=document.createElement('span');t.innerHTML=ic(n,c);return t.firstChild}
+var STAGE_IC=['rocket','layers','refresh','box','shuffle','lock','crown','chart'];
+var STAGE_COL=['#6b5fb5','#524794','#443980','#5e52a8','#3c3273','#6a5db8','#2f275c','#4b408a'];
+var STAGE_SHORT=['Tổng quan','AL Cơ bản','AL Nâng cao','HM Cơ bản','HM Nâng cao','Ngoại lệ','Boss','Tổng kết'];
+function pad(n){return String(n).padStart(2,'0')}
+
+/* ================= trạng thái ================= */
+var user=null,S=null,cur=-1,lastInteract=Date.now();
+var TOPIC_OF={},IDS_OF=[],ALL_IDS=[],TITLE_OF={};
+var TOPIC_NAME={overview:'Tổng quan Collections & Generics',al_basic:'ArrayList cơ bản & Big-O',al_adv:'ArrayList nâng cao & Stream',hm_basic:'HashMap cơ bản & Đếm tần suất',hm_adv:'HashMap nâng cao (Bucket, equals/hashCode)',exception:'Ném/Bắt Ngoại lệ & Phòng thủ Collection',boss:'Boss cuối: Bug Zoo CourseManager'};
+var TOPIC_STAGE={overview:0,al_basic:1,al_adv:2,hm_basic:3,hm_adv:4,exception:5,boss:6};
+
+function blockIds(b){
+  if(b.k==='quiz'||b.k==='bug'||b.k==='fill'||b.k==='parsons')return [b.id];
+  if(b.k==='triage')return b.items.map(function(_,i){return b.id+'.'+i});
+  return [];
+}
+STAGES.forEach(function(st,si){
+  IDS_OF[si]=[];
+  st.blocks.forEach(function(b){blockIds(b).forEach(function(id){
+    IDS_OF[si].push(id);ALL_IDS.push(id);TOPIC_OF[id]=b.topic;TITLE_OF[id]='Chặng '+si+' · '+(b.title||b.tag||b.k)+(b.k==='triage'?' (câu '+(+id.split('.')[1]+1)+')':'');
+  })});
+});
+
+function skey(id){return 'col.s.'+id}
+function loadState(id){
+  var raw=store.get(skey(id)),d=null;
+  try{d=raw?JSON.parse(raw):null}catch(e){d=null}
+  if(!d)d={solved:{},attempts:[],queue:[],xp:0,badges:[],last:-1,created:Date.now()};
+  if(!d.queue)d.queue=[];if(!d.attempts)d.attempts=[];if(!d.badges)d.badges=[];if(!d.solved)d.solved={};
+  if(d.timeMs==null)d.timeMs=0;if(d.checkins==null)d.checkins=0;
+  d.queue.forEach(function(e){if(!e.eid)e.eid=id+'-'+uid();if(!e.type)e.type=e.baiTap?'attempt':'progress'});
+  return d;
+}
+function save(){if(user&&S)store.set(skey(user.id),JSON.stringify(S))}
+
+/* ================= điểm số ================= */
+// Mỗi bài: đúng ngay lần đầu không gợi ý = 1 điểm; đúng lần đầu có gợi ý = 0.75; đúng sau khi thử lại = 0.5; xem đáp án = 0.
+function itemPts(r){if(!r||!r.done||r.revealed)return 0;if(r.first)return 1;if(r.tries===1)return .75;return .5}
+function stats(){
+  var o={done:0,first:0,retry:0,rv:0,total:ALL_IDS.length},pts=0;
+  ALL_IDS.forEach(function(id){
+    var r=S.solved[id];
+    if(r&&r.done){o.done++;if(r.revealed)o.rv++;else if(r.first)o.first++;else o.retry++}
+    pts+=itemPts(r);
+  });
+  o.todo=o.total-o.done;
+  o.score=o.total?Math.round(pts/o.total*100)/10:0;
+  o.pct=o.total?Math.round(o.done/o.total*100):0;
+  return o;
+}
+function stageProg(i){var ids=IDS_OF[i];var d=ids.filter(function(x){return S.solved[x]&&S.solved[x].done}).length;return {d:d,n:ids.length}}
+function nextStage(){for(var i=0;i<STAGES.length;i++){var p=stageProg(i);if(p.n&&p.d<p.n)return i}return STAGES.length-1}
+function fmtTime(ms){var s=Math.floor(ms/1000),hh=Math.floor(s/3600),mm=Math.floor(s%3600/60);return hh?hh+':'+pad(mm)+':'+pad(s%60):pad(mm)+':'+pad(s%60)}
+function fmtClock(ts){var d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtDateTime(ts){var d=new Date(ts);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+function ago(ts){var s=(Date.now()-ts)/1000;if(s<60)return 'vừa xong';if(s<3600)return Math.floor(s/60)+' phút trước';if(s<86400)return Math.floor(s/3600)+' giờ trước';var d=new Date(ts);return d.getDate()+'/'+(d.getMonth()+1)}
+function firstName(){return user?user.name.split(/\s+/).slice(-1)[0]:''}
+function initial(){var f=firstName();return f?f.charAt(0).toUpperCase():'?'}
+function greet(){var hr=new Date().getHours();return hr<11?'Chào buổi sáng':hr<13?'Chào buổi trưa':hr<18?'Chào buổi chiều':'Chào buổi tối'}
+
+/* ================= Google Sheet ================= */
+var SY={busy:false,err:false,last:0,timer:null};
+function sheetUrl(){return String(CONFIG.SHEET_URL||store.get('col.sheet')||'').trim()}
+function validUrl(u){return /^https:\/\/script\.google(usercontent)?\.com\/\S+$/.test(u)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function baseEv(type){return {type:type,eid:user.id+'-'+uid(),ts:Date.now(),ten:user.name,mssv:user.id,lop:user.lop||''}}
+function enqueue(ev){
+  if(ev.type==='progress')S.queue=S.queue.filter(function(e){return e.type!=='progress'});
+  S.queue.push(ev);
+  if(S.queue.length>2000)S.queue=S.queue.slice(-2000);
+  save();scheduleFlush();syncUI();
+}
+function scheduleFlush(ms){clearTimeout(SY.timer);SY.timer=setTimeout(flush,ms==null?2500:ms)}
+function progressEv(){
+  var st=stats(),ev=baseEv('progress');
+  ev.diem=st.score;ev.xp=S.xp;ev.hoanThanh=st.done;ev.tongBai=st.total;ev.phanTram=st.pct;ev.dungNgay=st.first;ev.xemDapAn=st.rv;
+  ev.thoiGianPhut=Math.round(S.timeMs/60000);
+  ev.changHienTai=S.last>=0&&STAGES[S.last]?'Chặng '+S.last+' · '+STAGES[S.last].tab:'Tổng quan';
+  ev.chang={};
+  STAGES.forEach(function(s,i){var p=stageProg(i);if(p.n)ev.chang['Chặng '+i+' · '+s.tab]=p.d+'/'+p.n});
+  ev.huyHieu=S.badges.map(badgeName).join(', ');
+  return ev;
+}
+var progT=null;
+function queueProgress(delay){clearTimeout(progT);progT=setTimeout(function(){if(S&&user)enqueue(progressEv())},delay==null?1200:delay)}
+function flush(){
+  var url=sheetUrl();
+  if(!url||!S||!user||!S.queue.length||SY.busy)return;
+  if(navigator.onLine===false){SY.err=true;syncUI();return}
+  SY.busy=true;syncUI();
+  var batch=S.queue.slice(0,40),owner=user.id,body=JSON.stringify({v:2,events:batch});
+  function done(ok){
+    SY.busy=false;
+    if(ok){
+      var ids={};batch.forEach(function(e){if(e.eid)ids[e.eid]=1});
+      var tgt=(user&&user.id===owner)?S:loadState(owner);
+      tgt.queue=tgt.queue.filter(function(e){return e.eid&&!ids[e.eid]});
+      store.set(skey(owner),JSON.stringify(tgt));
+      SY.err=false;SY.last=Date.now();
+      if(S&&S.queue.length)scheduleFlush(500);
+    }else SY.err=true;
+    syncUI();
+  }
+  try{
+    fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body})
+      .then(function(r){return r.json().then(function(j){done(!!(j&&j.ok))},function(){done(r.ok)})})
+      .catch(function(){
+        return fetch(url,{method:'POST',mode:'no-cors',keepalive:body.length<60000,headers:{'Content-Type':'text/plain;charset=utf-8'},body:body})
+          .then(function(){done(true)},function(){done(false)});
+      });
+  }catch(e){done(false)}
+}
+function testConn(out){
+  var url=sheetUrl();
+  if(!url){out.textContent='Chưa có URL Google Sheet.';return}
+  out.textContent='Đang kiểm tra kết nối…';
+  fetch(url+(url.indexOf('?')<0?'?':'&')+'action=ping&t='+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(j){
+      if(j&&j.ok){out.textContent='✓ Kết nối tốt với "'+(j.sheet||'Google Sheet')+'".';SY.err=false;flush()}
+      else out.textContent='Máy chủ phản hồi nhưng không đúng định dạng. Kiểm tra lại mã Apps Script.';
+      syncUI();
+    })
+    .catch(function(){out.textContent='✗ Không kết nối được. Kiểm tra URL và quyền truy cập "Bất kỳ ai".'});
+}
+function syncState(){if(!sheetUrl())return 'off';if(SY.err)return 'err';if(S&&S.queue.length)return 'wait';return 'ok'}
+function syncLine(){
+  var st=syncState(),n=S?S.queue.length:0;
+  if(st==='off')return 'Giảng viên chưa cấu hình Google Sheet. Bạn vẫn có thể tải file CSV để nhập vào Google Sheets.';
+  if(st==='err')return 'Chưa gửi được (mất mạng hoặc sai URL). Trang sẽ tự gửi lại, còn '+n+' bản ghi đang chờ.';
+  if(st==='wait')return SY.busy?'Đang gửi '+n+' bản ghi lên Google Sheet…':'Còn '+n+' bản ghi đang chờ gửi lên Google Sheet.';
+  return 'Điểm danh, tiến độ và từng câu trả lời đã được ghi vào Google Sheet'+(SY.last?' lúc '+fmtClock(SY.last):'')+'.';
+}
+function syncUI(){
+  var el=$('#sync');if(!el)return;
+  var st=syncState(),n=S?S.queue.length:0;
+  el.className='pill sync '+st;
+  $('#syncTx').textContent={off:'Chưa nối Sheet',err:'Mất kết nối',wait:SY.busy?'Đang gửi…':'Chờ gửi · '+n,ok:'Đã đồng bộ'}[st];
+  ['#syncLn','#bnTx','#sumSync'].forEach(function(s){var e=$(s);if(e)e.textContent=syncLine()});
+}
+
+/* ================= xuất kết quả ================= */
+function csvCell(v){
+  v=v==null?'':String(v);
+  if(/^[=+\-@]/.test(v))v="'"+v;
+  return /[",\n\r;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
+}
+function downloadCSV(){
+  var st=stats();
+  var rows=[['Thời gian','MSSV','Họ tên','Lớp','Chặng','Mã bài','Tên bài','Kết quả','Lần thử','Gợi ý','Tự tin','Trả lời']];
+  S.attempts.forEach(function(e){rows.push([fmtDateTime(e.ts),e.mssv,e.ten,e.lop||user.lop||'',e.chang,e.baiTap,e.tenBai||TITLE_OF[e.baiTap]||'',e.ketQua,e.lanThu,e.goiY,e.tuTin,e.traLoi])});
+  rows.push([],['TỔNG KẾT'],['Họ tên',user.name],['MSSV',user.id],['Lớp',user.lop||''],['Điểm /10',st.score],['Hoàn thành',st.done+'/'+st.total],['Đúng ngay lần đầu',st.first],['Xem đáp án',st.rv],['XP',S.xp],['Thời gian học (phút)',Math.round(S.timeMs/60000)],['Xuất lúc',fmtDateTime(Date.now())]);
+  var csv='\ufeff'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n');
+  var url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  var a=h('a',{href:url,download:'Collections_'+user.id+'.csv'});document.body.append(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);a.remove()},800);
+  toast('Đã tải CSV. Mở Google Sheets › Tệp › Nhập để xem.');
+}
+
+/* ================= ghi nhận lượt làm bài ================= */
+function recOf(id){return S.solved[id]||(S.solved[id]={tries:0,done:false,ok:false,first:false,revealed:false,hints:0})}
+function stageOf(id){return IDS_OF.findIndex(function(a){return a.indexOf(id)>=0})}
+function logEv(ev){S.attempts.push(ev);if(S.attempts.length>1500)S.attempts=S.attempts.slice(-1500);enqueue(ev)}
+function attempt(id,d){
+  var r=recOf(id);r.tries++;if(d.hints>r.hints)r.hints=d.hints;
+  var ev=baseEv('attempt');
+  ev.chang=stageOf(id);ev.baiTap=id;ev.tenBai=TITLE_OF[id]||id;ev.ketQua=d.ok?'đúng':'sai';ev.lanThu=r.tries;ev.goiY=d.hints||0;ev.tuTin=d.conf||'';ev.traLoi=String(d.ans==null?'':d.ans).slice(0,300);
+  if(d.ok&&!r.done){
+    r.done=true;r.ok=true;r.first=(r.tries===1&&!d.hints);r.at=Date.now();
+    var gain=r.tries===1?(d.hints?7:10):5;S.xp+=gain;toast('+'+gain+' XP 🎉');
+  }
+  logEv(ev);afterChange();
+}
+function reveal(id,hints){
+  var r=recOf(id);
+  if(!r.done){
+    r.done=true;r.revealed=true;r.at=Date.now();
+    var ev=baseEv('attempt');
+    ev.chang=stageOf(id);ev.baiTap=id;ev.tenBai=TITLE_OF[id]||id;ev.ketQua='xem đáp án';ev.lanThu=r.tries;ev.goiY=hints||0;ev.tuTin='';ev.traLoi='';
+    logEv(ev);
+  }
+  afterChange();
+}
+var BADGES=[
+  {id:'first',em:'🚀',name:'Phi hành gia tập sự',desc:'Hoàn thành bài đầu tiên',test:function(){return Object.keys(S.solved).some(function(k){return S.solved[k].ok})}},
+  {id:'alist',em:'📦',name:'Bậc thầy ArrayList',desc:'Đúng trọn vẹn Chặng 1 & 2',test:function(){return IDS_OF[1].concat(IDS_OF[2]).every(function(i){return S.solved[i]&&S.solved[i].ok})}},
+  {id:'hmap',em:'🗝️',name:'Kiến trúc sư HashMap',desc:'Đúng trọn vẹn Chặng 3 & 4',test:function(){return IDS_OF[3].concat(IDS_OF[4]).every(function(i){return S.solved[i]&&S.solved[i].ok})}},
+  {id:'boss',em:'🛸',name:'Chinh phục Bug Zoo',desc:'Hạ Boss trong ≤ 3 lần thử',test:function(){var r=S.solved['boss-bug'];return !!(r&&r.ok&&r.tries<=3)}}
+];
+function badgeName(id){var b=BADGES.filter(function(x){return x.id===id})[0];return b?b.name:id}
+function afterChange(){
+  BADGES.forEach(function(b){if(S.badges.indexOf(b.id)<0&&b.test()){S.badges.push(b.id);setTimeout(function(){toast(b.em+' Huy hiệu mới: '+b.name)},900)}});
+  save();queueProgress();chrome();chips();
+}
+
+/* ================= giao diện chung ================= */
+var toastT=null;
+function toast(t){
+  var e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){e.hidden=true},2600);
+}
+function navBtn(i,icn,label){
+  return h('button',{class:'nv',type:'button','data-i':String(i),onclick:function(){go(i);closeNav()}},icon(icn),h('span',{class:'nt'},label),h('span',{class:'pr'}));
+}
+function ringBg(p){var pc=p.n?Math.round(p.d/p.n*100):0;return 'background:conic-gradient(var(--accent) '+pc+'%,var(--surface2) 0)'}
+function chrome(){
+  if(!S)return;
+  var nav=$('#nav');
+  if(!nav.children.length){
+    nav.append(navBtn(-1,'home','Tổng quan'));
+    STAGES.forEach(function(st,i){nav.append(navBtn(i,STAGE_IC[i]||'layers',st.tab))});
+  }
+  Array.prototype.forEach.call(nav.children,function(b){
+    var i=+b.getAttribute('data-i');
+    b.setAttribute('aria-current',i===cur?'page':'false');
+    if(i>=0){var p=stageProg(i);b.classList.toggle('done',p.n>0&&p.d===p.n);b.querySelector('.pr').textContent=p.n?p.d+'/'+p.n:''}
+  });
+  var s=stats();
+  $('#pct').textContent=s.pct+'%';$('#bar').style.width=s.pct+'%';$('#xp').textContent=S.xp;
+  $('#pfAv').textContent=initial();$('#pfHi').textContent='Chào, '+firstName()+'! 👋';$('#pfId').textContent=user.id+(user.lop?' · '+user.lop:'');
+  $('#usr').textContent=initial();
+  var boss=S.solved['boss-bug'],bossDone=!!(boss&&boss.done);
+  if(bossDone||cur===6){$('#prT').textContent='Tổng kết';$('#prP').textContent='Xem điểm, huy hiệu và gửi báo cáo cho giảng viên.';$('#prB').textContent='Xem ngay';$('#prB').onclick=function(){go(7);closeNav()}}
+  else{$('#prT').textContent='Boss cuối';$('#prP').textContent='Tìm 6 lỗi ẩn trong hệ thống tính lương!';$('#prB').textContent='Thử thách';$('#prB').onclick=function(){go(6);closeNav()}}
+  var rg=$('#ring');
+  if(rg&&cur>=0){var p=stageProg(cur);rg.setAttribute('style',ringBg(p));rg.querySelector('span').innerHTML=Math.round(p.d/p.n*100)+'%<small>'+p.d+'/'+p.n+' bài</small>'}
+  syncUI();
+}
+var chipReg=[];
+function chips(){
+  chipReg.forEach(function(c){
+    var rs=c.ids.map(function(i){return S.solved[i]||{}});
+    var all=rs.every(function(r){return r.done}),rv=rs.some(function(r){return r.revealed});
+    c.el.className='st'+(all?(rv?' rv':' ok'):'');
+    c.el.textContent=all?(rv?'Đã xem đáp án':'✓ Hoàn thành'):(rs.some(function(r){return r.done})?'Đang làm':'Chưa làm');
+  });
+}
+function exCard(tag,ids,title){
+  var st=h('span',{class:'st'});chipReg.push({el:st,ids:ids});
+  var c=h('section',{class:'ex','aria-label':title||tag},h('div',{class:'exh'},h('span',{class:'tag'},title?tag+' · '+title:tag),st));
+  return c;
+}
+function hintUI(hints){
+  var box=h('div',{class:'hints'}),n=0;
+  var btn=h('button',{class:'btn ghost sm',type:'button'},'Gợi ý');
+  function lab(){btn.textContent='💡 Gợi ý ('+(hints.length-n)+')'}
+  lab();
+  btn.addEventListener('click',function(){
+    if(n>=hints.length)return;
+    box.append(h('div',{class:'hint',html:fmt(hints[n])}));n++;lab();
+    if(n>=hints.length)btn.disabled=true;
+  });
+  return {btn:hints&&hints.length?btn:null,box:box,count:function(){return n}};
+}
+
+
+/* ================= các khối nội dung ================= */
+var B={};
+B.md=function(b){return h('div',{class:'txt',html:b.html})};
+B.html=function(b){return h('div',{html:b.html})};
+B.code=function(b){return codeEl(b.code,{mark:b.mark}).el};
+B.tree=function(){
+  var s='<svg class="tree" viewBox="0 0 680 265" role="img" aria-label="Sơ đồ phân cấp: Iterable -> Collection -> List, Set, Queue; nhánh Map tách biệt hoàn toàn"><title>Sơ đồ phân cấp Java Collections Framework</title>'
+  +'<path class="ln" d="M235 46 V74 M235 114 V142 M235 142 H80 V168 M235 142 H390 V168 M235 142 V168 M555 114 V168"/>'
+  +'<rect class="nd" x="155" y="10" width="160" height="36" rx="10"/><text x="235" y="28">Iterable&lt;E&gt;</text>'
+  +'<rect class="nd hot" x="150" y="74" width="170" height="40" rx="10"/><text class="inv" x="235" y="94">Collection&lt;E&gt;</text>'
+  +'<rect class="nd" x="15" y="168" width="130" height="40" rx="10"/><text x="80" y="188">List&lt;E&gt;</text>'
+  +'<text x="80" y="226" style="font-size:11px">ArrayList · LinkedList</text>'
+  +'<text x="80" y="244" style="font-size:10.5px;opacity:.75">(có thứ tự, cho trùng)</text>'
+  +'<rect class="nd" x="170" y="168" width="130" height="40" rx="10"/><text x="235" y="188">Set&lt;E&gt;</text>'
+  +'<text x="235" y="226" style="font-size:11px">HashSet · TreeSet</text>'
+  +'<text x="235" y="244" style="font-size:10.5px;opacity:.75">(không trùng)</text>'
+  +'<rect class="nd" x="325" y="168" width="130" height="40" rx="10"/><text x="390" y="188">Queue&lt;E&gt;</text>'
+  +'<text x="390" y="226" style="font-size:11px">ArrayDeque · PriorityQueue</text>'
+  +'<text x="390" y="244" style="font-size:10.5px;opacity:.75">(hàng đợi)</text>'
+  +'<rect class="nd hot" x="475" y="74" width="160" height="40" rx="10"/><text class="inv" x="555" y="94">Map&lt;K, V&gt;</text>'
+  +'<rect class="nd" x="475" y="168" width="160" height="40" rx="10"/><text x="555" y="188">HashMap · TreeMap</text>'
+  +'<text x="555" y="226" style="font-size:11px">LinkedHashMap</text>'
+  +'<text x="555" y="244" style="font-size:10.5px;opacity:.75">(cặp key → value)</text>'
+  +'</svg>';
+  return h('div',{class:'treebox'},h('div',{html:s}),h('p',{class:'cap'},'Lưu ý: ',h('code',null,'List, Set, Queue'),' kế thừa ',h('code',null,'Collection<E>'),', còn ',h('code',null,'Map<K,V>'),' đứng riêng vì lưu cặp ',h('strong',null,'key → value'),'.'));
+};
+
+B.quiz=function(b){
+  var conf=null,tries=0,locked=false;
+  var card=exCard(b.tag||'Câu hỏi',[b.id]);
+  var hu=hintUI(b.hints||[]);
+  card.append(h('div',{class:'q',html:fmt(b.q)}));
+  if(b.code)card.append(codeEl(b.code).el);
+  var confRow=h('div',{class:'conf'},'Độ tự tin của bạn:');
+  [['chắc chắn','Chắc chắn'],['hơi chắc','Hơi chắc'],['đoán','Đoán']].forEach(function(c){
+    var cb=h('button',{class:'cf',type:'button','aria-pressed':'false'},c[1]);
+    cb.addEventListener('click',function(){
+      if(locked)return;conf=c[0];
+      confRow.querySelectorAll('.cf').forEach(function(x){x.setAttribute('aria-pressed',x===cb?'true':'false')});
+    });
+    confRow.append(cb);
+  });
+  var opts=h('div',{class:'opts'}),fb=h('div',{class:'fb','aria-live':'polite'});
+  var btns=b.options.map(function(o,i){
+    o=typeof o==='string'?{t:o}:o;
+    var btn=h('button',{class:'opt',type:'button'},h('span',{class:'lt'},String.fromCharCode(65+i)),h('span',{class:'tx'},o.mono?h('pre',null,o.t):h('span',{html:fmt(o.t)})));
+    btn.addEventListener('click',function(){
+      if(locked)return;tries++;
+      var ok=b.correct==null||i===b.correct;
+      attempt(b.id,{ok:ok,ans:String.fromCharCode(65+i),conf:conf,hints:hu.count()});
+      if(ok){btn.classList.add('good');locked=true;fb.className='fb ok';fb.innerHTML='<strong>Đúng.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>';}
+      else{
+        btn.classList.add('bad');btn.disabled=true;
+        if(tries>=2){
+          locked=true;btns[b.correct].classList.add('good');reveal(b.id,hu.count());
+          fb.className='fb bad';fb.innerHTML='<strong>Đáp án là '+String.fromCharCode(65+b.correct)+'.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>';
+        }else{fb.className='fb bad';fb.textContent='Chưa đúng, thử lại nhé.'}
+      }
+      if(locked)btns.forEach(function(x){x.disabled=true});
+    });
+    opts.append(btn);return btn;
+  });
+  card.append(confRow,opts,hu.box,fb,hu.btn?h('div',{class:'row'},hu.btn):null);
+  return card;
+};
+
+B.triage=function(b){
+  var card=exCard('Phân loại',b.items.map(function(_,i){return b.id+'.'+i}),b.title);
+  b.items.forEach(function(it,idx){
+    var id=b.id+'.'+idx,tries=0,locked=false;
+    var fb=h('div',{class:'fb','aria-live':'polite'});
+    var row=h('div',{class:'row'});
+    var cbs={};
+    b.choices.forEach(function(c){
+      var cb=h('button',{class:'ch',type:'button'},c.label);cbs[c.id]=cb;
+      cb.addEventListener('click',function(){
+        if(locked)return;tries++;
+        var ok=c.id===it.answer;
+        attempt(id,{ok:ok,ans:c.id});
+        if(ok){cb.classList.add('good');locked=true;fb.className='fb ok';fb.innerHTML='<strong>Đúng.</strong> <span class="ex-t">'+fmt(it.why)+'</span>';}
+        else{
+          cb.classList.add('bad');cb.disabled=true;
+          if(tries>=2){locked=true;cbs[it.answer].classList.add('good');reveal(id);fb.className='fb bad';fb.innerHTML='<strong>Đáp án: '+esc(b.choices.filter(function(x){return x.id===it.answer})[0].label)+'.</strong> <span class="ex-t">'+fmt(it.why)+'</span>';}
+          else{fb.className='fb bad';fb.textContent='Chưa đúng, thử lại nhé.'}
+        }
+        if(locked)Object.keys(cbs).forEach(function(k){cbs[k].disabled=true});
+      });
+      row.append(cb);
+    });
+    card.append(h('div',{class:'tri'},it.text?h('div',{class:'q',html:fmt(it.text)}):null,it.code?codeEl(it.code).el:null,row,fb));
+  });
+  return card;
+};
+
+B.bug=function(b){
+  var sel={},checks=0,locked=false;
+  var hu=hintUI(b.hints||[]);
+  var card=exCard('Săn lỗi',[b.id]);
+  card.append(h('div',{class:'q',html:fmt(b.intro)}));
+  var c=codeEl(b.code,{interactive:true});
+  var allBug={};b.bugs.forEach(function(g){g.lines.forEach(function(l){allBug[l]=1})});
+  c.rows.forEach(function(row,i){
+    row.addEventListener('click',function(){
+      if(locked)return;var n=i+1;
+      row.classList.remove('hit','fp','miss');
+      if(sel[n]){delete sel[n];row.classList.remove('sel');row.setAttribute('aria-pressed','false')}
+      else{sel[n]=1;row.classList.add('sel');row.setAttribute('aria-pressed','true')}
+    });
+  });
+  var out=h('div',{class:'fb','aria-live':'polite'}),list=h('ul',{class:'bugl'}),acts=h('div',{class:'row'});
+  var chk=h('button',{class:'btn',type:'button'},'Kiểm tra');
+  var rv=h('button',{class:'btn ghost',type:'button',hidden:true},'Xem đáp án');
+  function showAll(){
+    list.innerHTML='';
+    b.bugs.forEach(function(g){
+      var found=g.lines.some(function(l){return sel[l]});
+      list.append(h('li',{class:found?'':'m',html:'<strong>Dòng '+g.lines.join(' hoặc ')+':</strong> '+fmt(g.why)}));
+      g.lines.forEach(function(l){var r=c.rows[l-1];if(!found&&!r.classList.contains('fp'))r.classList.add('miss')});
+    });
+  }
+  chk.addEventListener('click',function(){
+    if(locked)return;checks++;
+    var found=b.bugs.filter(function(g){return g.lines.some(function(l){return sel[l]})});
+    var fp=Object.keys(sel).map(Number).filter(function(l){return !allBug[l]});
+    c.rows.forEach(function(r,i){var n=i+1;r.classList.remove('hit','fp');if(sel[n]){r.classList.remove('sel');r.classList.add(allBug[n]?'hit':'fp')}});
+    var ok=found.length===b.bugs.length&&fp.length===0;
+    attempt(b.id,{ok:ok,ans:Object.keys(sel).join(','),hints:hu.count()});
+    list.innerHTML='';
+    found.forEach(function(g){list.append(h('li',{html:'<strong>Dòng '+g.lines.join(' hoặc ')+':</strong> '+fmt(g.why)}))});
+    if(ok){locked=true;out.className='fb ok';out.innerHTML='<strong>Tìm đủ '+b.bugs.length+'/'+b.bugs.length+' lỗi.</strong>';chk.disabled=true;rv.hidden=true;}
+    else{
+      out.className='fb bad';
+      out.textContent='Tìm đúng '+found.length+'/'+b.bugs.length+' lỗi'+(fp.length?', chọn nhầm '+fp.length+' dòng không có lỗi (đỏ)':'')+(found.length<b.bugs.length?'. Còn thiếu '+(b.bugs.length-found.length)+' lỗi.':'.');
+      if(checks>=3)rv.hidden=false;
+    }
+  });
+  rv.addEventListener('click',function(){
+    locked=true;reveal(b.id,hu.count());showAll();chk.disabled=true;rv.hidden=true;
+    out.className='fb bad';out.textContent='Đây là các lỗi (vàng là lỗi bạn bỏ sót).';
+  });
+  acts.append(chk,rv,hu.btn);
+  card.append(c.el,acts,hu.box,out,list);
+  return card;
+};
+
+B.fill=function(b){
+  var tries=0,locked=false;
+  var hu=hintUI(b.hints||[]);
+  var card=exCard('Điền chỗ trống',[b.id]);
+  card.append(h('div',{class:'q',html:fmt(b.intro)}));
+  var inputs={};
+  var inner=h('div',{class:'code-in'});
+  b.code.split('\n').forEach(function(line,i){
+    var row=h('div',{class:'cl'});row.append(h('span',{class:'no'},String(i+1)));
+    var tx=h('span',{class:'tx'});
+    var parts=line.split(/\{\{(\w+)\}\}/);
+    parts.forEach(function(p,j){
+      if(j%2===0){tx.append(h('span',{html:hlLine(p)}))}
+      else{var inp=h('input',{type:'text',class:'bl',id:b.id+'-'+p,autocomplete:'off',autocapitalize:'off',spellcheck:'false','aria-label':'Chỗ trống '+p,size:b.blanks[p].w||8});inputs[p]=inp;tx.append(inp)}
+    });
+    row.append(tx);inner.append(row);
+  });
+  card.append(h('div',{class:'code'},inner));
+  var fb=h('div',{class:'fb','aria-live':'polite'}),acts=h('div',{class:'row'});
+  var chk=h('button',{class:'btn',type:'button'},'Kiểm tra');
+  var rv=h('button',{class:'btn ghost',type:'button',hidden:true},'Xem đáp án');
+  chk.addEventListener('click',function(){
+    if(locked)return;tries++;
+    var allOk=true,ans=[];
+    Object.keys(inputs).forEach(function(k){
+      var v=inputs[k].value.trim().replace(/\s+/g,' ');ans.push(k+'='+v);
+      var ok=new RegExp(b.blanks[k].re).test(v);
+      inputs[k].classList.remove('ok','bad');inputs[k].classList.add(ok?'ok':'bad');if(!ok)allOk=false;
+    });
+    attempt(b.id,{ok:allOk,ans:ans.join(';'),hints:hu.count()});
+    if(allOk){locked=true;chk.disabled=true;rv.hidden=true;fb.className='fb ok';fb.innerHTML='<strong>Đúng.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>'}
+    else{fb.className='fb bad';fb.textContent='Có chỗ chưa đúng (viền đỏ). Thử lại nhé.';if(tries>=3)rv.hidden=false}
+  });
+  rv.addEventListener('click',function(){
+    locked=true;reveal(b.id,hu.count());chk.disabled=true;rv.hidden=true;
+    var ans=b.id==='s3-fill'?{a:'getOrDefault',b:'put',c:'entrySet'}:{a:'extends',b:'super',c:'unmodifiableList'};
+    Object.keys(inputs).forEach(function(k){inputs[k].value=ans[k]||'';inputs[k].classList.remove('bad');inputs[k].classList.add('ok')});
+    fb.className='fb bad';fb.innerHTML='<strong>Đáp án đã được điền.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>';
+  });
+  acts.append(chk,rv,hu.btn);
+  card.append(acts,hu.box,fb);
+  return card;
+};
+
+B.parsons=function(b){
+  var n=b.lines.length,tries=0,locked=false;
+  var rnd=seeded(b.id),order=b.lines.map(function(_,i){return i});
+  for(var i=n-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=order[i];order[i]=order[j];order[j]=t}
+  if(order.every(function(v,i){return v===i})){var t2=order[0];order[0]=order[1];order[1]=t2}
+  var hu=hintUI(b.hints||[]);
+  var card=exCard('Sắp xếp code',[b.id]);
+  card.append(h('div',{class:'q',html:fmt(b.intro)}));
+  var list=h('div',{class:'pls'}),fb=h('div',{class:'fb','aria-live':'polite'});
+  function draw(marks){
+    list.innerHTML='';
+    order.forEach(function(li,pos){
+      var up=h('button',{type:'button','aria-label':'Chuyển lên',disabled:locked||pos===0},'↑');
+      var dn=h('button',{type:'button','aria-label':'Chuyển xuống',disabled:locked||pos===n-1},'↓');
+      up.addEventListener('click',function(){var x=order[pos];order[pos]=order[pos-1];order[pos-1]=x;draw()});
+      dn.addEventListener('click',function(){var x=order[pos];order[pos]=order[pos+1];order[pos+1]=x;draw()});
+      var cls='pl'+(marks?(li===pos?' good':' bad'):'');
+      var txt=locked?b.lines[li]:b.lines[li].trim();
+      list.append(h('div',{class:cls},h('span',{class:'tx',html:hlLine(txt)}),locked?null:h('span',{class:'mv'},up,dn)));
+    });
+  }
+  draw();
+  var acts=h('div',{class:'row'});
+  var chk=h('button',{class:'btn',type:'button'},'Kiểm tra');
+  var rv=h('button',{class:'btn ghost',type:'button',hidden:true},'Xem đáp án');
+  chk.addEventListener('click',function(){
+    if(locked)return;tries++;
+    var good=order.filter(function(li,pos){return li===pos}).length,ok=good===n;
+    attempt(b.id,{ok:ok,ans:order.join(','),hints:hu.count()});
+    if(ok){locked=true;chk.disabled=true;rv.hidden=true;draw(true);fb.className='fb ok';fb.innerHTML='<strong>Đúng.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>'}
+    else{draw(true);fb.className='fb bad';fb.textContent=good+'/'+n+' dòng đã đúng vị trí (xanh). Sắp xếp lại các dòng đỏ.';if(tries>=3)rv.hidden=false}
+  });
+  rv.addEventListener('click',function(){
+    locked=true;reveal(b.id,hu.count());order=b.lines.map(function(_,i){return i});draw(true);chk.disabled=true;rv.hidden=true;
+    fb.className='fb bad';fb.innerHTML='<strong>Thứ tự đúng đã được xếp sẵn.</strong> <span class="ex-t">'+fmt(b.explain)+'</span>';
+  });
+  acts.append(chk,rv,hu.btn);
+  card.append(list,acts,hu.box,fb);
+  return card;
+};
+
+B.trace=function(b){
+  var i=0,timer=null,steps=b.steps;
+  var card=h('section',{class:'ex','aria-label':b.title},h('div',{class:'exh'},h('span',{class:'tag'},'Chạy từng bước · '+b.title)));
+  var c=codeEl(b.code);
+  var right=h('div');
+  var note=h('div',{class:'stepnote','aria-live':'polite'});
+  var cnt=h('span',{class:'cnt'});
+  var back=h('button',{class:'btn ghost sm',type:'button'},'← Lùi');
+  var next=h('button',{class:'btn sm',type:'button'},'Bước tiếp →');
+  var play=h('button',{class:'btn ghost sm',type:'button'},'Tự chạy');
+  var reset=h('button',{class:'btn ghost sm',type:'button'},'Làm lại');
+  function stop(){if(timer){clearInterval(timer);timer=null;play.textContent='Tự chạy'}}
+  function render(){
+    var s=steps[i];
+    c.rows.forEach(function(r,k){r.classList.remove('cur','err');if(k+1===s.l)r.classList.add(s.err?'err':'cur')});
+    right.innerHTML='';
+    if(s.v){
+      var t=h('table',{class:'vt'},h('thead',null,h('tr',null,h('th',null,'Biến'),h('th',null,'Kiểu khai báo'),h('th',null,'Kiểu thật'))),h('tbody',null,s.v.map(function(r){return h('tr',null,r.map(function(x){return h('td',null,x)}))})));
+      right.append(h('div',{class:'pn'},h('h4',null,'Biến'),t));
+    }
+    if(s.st)right.append(h('div',{class:'pn'},h('h4',null,'Call stack'),h('div',{class:'stk'},s.st.slice().reverse().map(function(f,k){return h('div',{class:'fr'+(k===0?' top':'')},f)}))));
+    if(s.ly)right.append(h('div',{class:'pn'},h('h4',null,'Đối tượng trong bộ nhớ'),h('div',{class:'lys'},s.ly.map(function(l){
+      var lab={wait:'chưa khởi tạo',run:'đang chạy',done:'xong',fail:'lỗi'}[l.s];
+      return h('div',{class:'ly '+l.s},h('b',null,l.n),' · '+lab,l.f.map(function(f){return h('span',{class:'fd'},f[0]+' = '+f[1],f[2]?h('span',{class:'pv'},'private'):null)}));
+    }))));
+    var con=h('div',{class:'con'});
+    var any=false;
+    for(var k=0;k<=i;k++){
+      if(steps[k].out){con.append(h('div',null,steps[k].out));any=true}
+      if(steps[k].err&&(k===i||!steps[k+1]||!steps[k+1].err||k===i)&&k===i){con.append(h('div',{class:'e'},'Exception in thread "main" java.lang.'+steps[k].err));any=true}
+    }
+    if(!any)con.append(h('i',null,'(chưa in gì)'));
+    right.append(h('div',{class:'pn'},h('h4',null,'Console'),con));
+    note.innerHTML=fmt(s.note);
+    cnt.textContent='Bước '+(i+1)+'/'+steps.length;
+    back.disabled=i===0;next.disabled=i===steps.length-1;
+    if(i===steps.length-1)stop();
+  }
+  back.addEventListener('click',function(){stop();if(i>0){i--;render()}});
+  next.addEventListener('click',function(){stop();if(i<steps.length-1){i++;render()}});
+  reset.addEventListener('click',function(){stop();i=0;render()});
+  play.addEventListener('click',function(){
+    if(timer){stop();return}
+    if(i>=steps.length-1)i=0;render();
+    play.textContent='Dừng';
+    timer=setInterval(function(){if(i<steps.length-1){i++;render()}else stop()},1700);
+  });
+  card.append(h('div',{class:'tr'},c.el,right),note,h('div',{class:'row'},back,next,play,reset,cnt));
+  render();
+  return card;
+};
+
+B.castlab=function(){
+  var mapType='HashMap',act='order';
+  var card=h('section',{class:'ex','aria-label':'Phòng thí nghiệm Map & equals/hashCode'},h('div',{class:'exh'},h('span',{class:'tag'},'Phòng thí nghiệm · So sánh HashMap, LinkedHashMap, TreeMap & Key')));
+  var res=h('div',{class:'res'}),codeBox=h('div');
+  var TYPES=[
+    {id:'HashMap',label:'new HashMap<>()'},
+    {id:'LinkedHashMap',label:'new LinkedHashMap<>()'},
+    {id:'TreeMap',label:'new TreeMap<>()'}
+  ];
+  var ACTS=[
+    {id:'order',label:'Thứ tự duyệt khi put("Chi",1), put("An",2), put("Binh",3)'},
+    {id:'nullKey',label:'Thử put(null, 99)'},
+    {id:'unbox',label:'int x = map.get("KhongCo");'},
+    {id:'safeGet',label:'int x = map.getOrDefault("KhongCo", 0);'}
+  ];
+  var segA=h('div',{class:'seg'}),segB=h('div',{class:'seg'});
+  function mk(seg,items,get,set){
+    seg.innerHTML='';
+    items.forEach(function(it){
+      var bt=h('button',{class:'sg',type:'button','aria-pressed':String(get()===it.id)},it.label);
+      bt.addEventListener('click',function(){set(it.id);update()});seg.append(bt);
+    });
+  }
+  function update(){
+    mk(segA,TYPES,function(){return mapType},function(v){mapType=v});
+    mk(segB,ACTS,function(){return act},function(v){act=v});
+    var code='Map<String, Integer> map = new '+mapType+'<>();\nmap.put("Chi", 1);\nmap.put("An", 2);\nmap.put("Binh", 3);\n';
+    if(act==='order')code+='System.out.println(map.keySet());';
+    else if(act==='nullKey')code+='map.put(null, 99);\nSystem.out.println(map.get(null));';
+    else if(act==='unbox')code+='int x = map.get("KhongCo"); // Unboxing!';
+    else code+='int x = map.getOrDefault("KhongCo", 0);\nSystem.out.println(x);';
+    codeBox.innerHTML='';codeBox.append(codeEl(code).el);
+    var cls,title,body;
+    if(act==='order'){
+      cls='ok';
+      if(mapType==='HashMap'){title='Thứ tự bất kỳ · Tốc độ O(1)';body='`HashMap` sắp xếp theo bucket băm nên thứ tự in ra **không đảm bảo** (không theo thứ tự chèn cũng không theo bảng chữ cái).'}
+      else if(mapType==='LinkedHashMap'){title='In ra: [Chi, An, Binh] · Tốc độ O(1)';body='`LinkedHashMap` duy trì danh sách liên kết kép nối các entry nên **giữ nguyên thứ tự chèn**.'}
+      else{title='In ra: [An, Binh, Chi] · Tốc độ O(log n)';body='`TreeMap` dùng cây đỏ-đen tự động **sắp xếp tăng dần theo Key** (`An -> Binh -> Chi`).'}
+    }else if(act==='nullKey'){
+      if(mapType==='TreeMap'){cls='rerr';title='Lỗi lúc chạy: NullPointerException';body='`TreeMap` phải gọi `compareTo` trên key để sắp xếp nên **không chấp nhận key `null`**!'}
+      else{cls='ok';title='Chạy được: In ra 99';body='`'+mapType+'` cho phép tối đa **1 key `null`** (luôn đặt ở bucket 0).'}
+    }else if(act==='unbox'){
+      cls='rerr';title='Lỗi lúc chạy: NullPointerException (do Unboxing)';
+      body='`map.get("KhongCo")` trả về `null` (kiểu `Integer`). Khi gán vào biến nguyên thủy `int x`, Java tự gọi `null.intValue()` và ném `NullPointerException`!';
+    }else{
+      cls='ok';title='An toàn tuyệt đối: In ra 0';
+      body='`getOrDefault("KhongCo", 0)` trả về `0` khi không tìm thấy key, tránh hoàn toàn `NullPointerException` khi mở hộp sang `int`.';
+    }
+    res.className='res '+cls;res.innerHTML='<strong>'+title+'</strong>'+fmt(body);
+  }
+  update();
+  card.append(h('div',{class:'lab'},h('div',null,h('h4',null,'Loại Map khởi tạo'),segA),h('div',null,h('h4',null,'Thao tác kiểm nghiệm'),segB),codeBox,res));
+  return card;
+};
+function sumText(){
+  var st=stats();
+  var lines=['BÁO CÁO BUỔI HỌC: Java Collections (ArrayList, HashMap, Exception)','Họ tên: '+user.name,'MSSV: '+user.id];
+  if(user.lop)lines.push('Lớp: '+user.lop);
+  lines.push('Điểm: '+st.score+'/10 · XP: '+S.xp,'Hoàn thành: '+st.done+'/'+st.total+' bài ('+st.pct+'%) · Đúng ngay lần đầu: '+st.first+' · Xem đáp án: '+st.rv,'Thời gian học: '+Math.round(S.timeMs/60000)+' phút','');
+  ALL_IDS.forEach(function(id){
+    var r=S.solved[id];
+    var s=!r?'chưa làm':(r.revealed?'đã xem đáp án':'đúng (lần thử '+r.tries+(r.hints?', '+r.hints+' gợi ý':'')+')');
+    lines.push('- '+TITLE_OF[id]+' ['+id+']: '+s);
+  });
+  return lines.join('\n');
+}
+function copyText(text,note,msg){
+  var done=function(){toast(msg||'Đã sao chép báo cáo')};
+  var fallback=function(){
+    var ta=h('textarea',{class:'rp',readonly:true});ta.value=text;note.innerHTML='';note.append(h('p',{class:'cap'},'Không sao chép tự động được. Chọn toàn bộ nội dung dưới đây rồi sao chép:'),ta);ta.focus();ta.select();
+  };
+  try{navigator.clipboard.writeText(text).then(done,fallback)}catch(e){fallback()}
+}
+
+function statCard(cls,icn,label,val,unit,sub){
+  return h('div',{class:'stat '+cls},
+    h('div',{class:'ti'},icon(icn)),
+    h('div',{class:'lb'},label),
+    h('div',{class:'vl'},String(val),unit?h('small',null,' '+unit):null),
+    h('div',{class:'sb'},sub)
+  );
+}
+
+B.summary=function(){
+  var wrap=h('div',{class:'sec',style:'margin-top:0'});
+  var st=stats();
+  wrap.append(h('div',{class:'stats',style:'margin-top:0'},
+    statCard('c-purple','check','Bài đã làm',st.done,'/ '+st.total,st.pct+'% hoàn thành'),
+    statCard('c-pink','target','Điểm bài tập',st.score,'/ 10',st.first+' câu đúng ngay lần đầu'),
+    statCard('c-yellow','zap','Điểm kinh nghiệm',S.xp,'XP',S.badges.length+'/'+BADGES.length+' huy hiệu'),
+    statCard('c-blue','clock','Thời gian học',Math.max(1,Math.round(S.timeMs/60000)),'phút',S.checkins+' lần điểm danh')
+  ));
+  var topics=Object.keys(TOPIC_NAME);
+  var tcard=h('div',{class:'ex'},h('div',{class:'exh'},h('span',{class:'tag'},'Theo chủ đề')));
+  var weak=[];
+  topics.forEach(function(tp){
+    var ids=ALL_IDS.filter(function(i){return TOPIC_OF[i]===tp});
+    var f=ids.filter(function(i){return S.solved[i]&&S.solved[i].first}).length;
+    var dn=ids.filter(function(i){return S.solved[i]&&S.solved[i].done}).length;
+    if(dn<ids.length||f<ids.length)weak.push(tp);
+    tcard.append(h('div',{class:'tp'},h('span',null,TOPIC_NAME[tp]),h('div',{class:'bw'},h('i',{style:'width:'+(ids.length?Math.round(f/ids.length*100):0)+'%'})),h('span',{class:'v'},f+'/'+ids.length+' đúng ngay')));
+  });
+  wrap.append(tcard);
+  wrap.append(h('div',{class:'txt',html:weak.length?'<h2>Nên ôn lại</h2><ul>'+weak.map(function(t){return '<li><a href="#chang-'+TOPIC_STAGE[t]+'">'+esc(TOPIC_NAME[t])+' (chặng '+TOPIC_STAGE[t]+')</a></li>'}).join('')+'</ul>':'<h2>Làm rất tốt 🎉</h2><p>Bạn đã đúng ngay từ lần đầu ở mọi chủ đề.</p>'}));
+  wrap.append(h('div',{class:'txt'},h('h2',null,'Huy hiệu'),h('div',{class:'badges'},BADGES.map(function(bd){var on=S.badges.indexOf(bd.id)>=0;return h('div',{class:'bdg'+(on?'':' off')},h('span',{class:'em'},bd.em),bd.name,h('small',null,bd.desc))}))));
+  wrap.append(h('div',{class:'txt',html:'<h2>Bảng tóm tắt nhanh (Cheat Sheet)</h2><div class="tbl"><table><thead><tr><th>Cấu trúc</th><th>Việc cần làm</th><th>Cách viết chuẩn</th></tr></thead><tbody><tr><td><strong>ArrayList</strong></td><td>Thêm / Đọc / Sửa / Xóa theo ĐK</td><td><code>add(e)</code> · <code>get(i)</code> · <code>set(i,e)</code> · <code>removeIf(p)</code></td></tr><tr><td><strong>ArrayList</strong></td><td>Xóa giá trị <code>1</code> trên <code>List&lt;Integer&gt;</code></td><td><code>list.remove(Integer.valueOf(1))</code> (tránh <code>remove(1)</code> xóa index 1!)</td></tr><tr><td><strong>ArrayList</strong></td><td>Sắp xếp nhiều tiêu chí</td><td><code>list.sort(Comparator.comparingDouble(Student::getGpa).reversed().thenComparing(Student::getName))</code></td></tr><tr><td><strong>HashMap</strong></td><td>Đọc an toàn / Đếm tần suất</td><td><code>map.getOrDefault(k, 0)</code> · <code>map.merge(k, 1, Integer::sum)</code></td></tr><tr><td><strong>HashMap</strong></td><td>Nhóm dữ liệu vào <code>List</code> con</td><td><code>map.computeIfAbsent(k, x -&gt; new ArrayList&lt;&gt;()).add(v)</code></td></tr><tr><td><strong>HashMap</strong></td><td>Duyệt cả key và value</td><td><code>for (Map.Entry&lt;K,V&gt; e : map.entrySet())</code></td></tr><tr><td><strong>Ngoại lệ</strong></td><td>Tham số sai / Trạng thái sai / Không thấy</td><td><code>IllegalArgumentException</code> · <code>IllegalStateException</code> · <code>NoSuchElementException</code></td></tr><tr><td><strong>Đóng gói</strong></td><td>Trả danh sách ra ngoài getter</td><td><code>Collections.unmodifiableList(list)</code> hoặc <code>List.copyOf(list)</code></td></tr></tbody></table></div><h2>10 Lỗi kinh điển cần tránh</h2><ol class="errs"><li>Gọi <code>list.remove(x)</code> bên trong vòng lặp <code>for-each</code> gây <code>ConcurrentModificationException</code>.</li><li>Trên <code>List&lt;Integer&gt;</code>, viết <code>remove(1)</code> làm xóa phần tử tại chỉ số 1 thay vì giá trị 1.</li><li>Gọi <code>add/set/remove</code> trên <code>List.of(...)</code> hoặc <code>add/remove</code> trên <code>Arrays.asList(...)</code> gây <code>UnsupportedOperationException</code>.</li><li>Dùng <code>==</code> thay vì <code>equals()</code> để so sánh hai đối tượng <code>Integer</code> hoặc <code>String</code>.</li><li>Unboxing kết quả <code>null</code> từ <code>map.get(k)</code> sang <code>int</code> gây <code>NullPointerException</code>.</li><li>Dùng object làm key của <code>HashMap</code> nhưng quên override cả <code>equals()</code> lẫn <code>hashCode()</code>, hoặc sửa trường của key sau khi đã <code>put</code>.</li><li>Gọi <code>groups.get(k).add(v)</code> khi chưa khởi tạo list con (hãy dùng <code>computeIfAbsent</code>).</li><li>Trả thẳng tham chiếu <code>private List</code> nội bộ qua getter khiến bên ngoài sửa tự do.</li><li>Viết <code>return a.gpa - b.gpa</code> trong <code>Comparator</code> gây mất phần thập phân hoặc tràn số.</li><li>Bắt ngoại lệ cha (<code>RuntimeException</code>) trước ngoại lệ con, hoặc bỏ trống khối <code>catch {}</code> (nuốt lỗi).</li></ol>'}));
+  var note=h('div'),scard=h('div',{class:'ex'});
+  scard.append(
+    h('div',{class:'exh'},h('span',{class:'tag'},'Google Sheet & Báo cáo')),
+    h('p',{class:'cap',id:'sumSync'},syncLine()),
+    h('div',{class:'row'},
+      sheetUrl()?h('button',{class:'btn',type:'button',onclick:function(){queueProgress(0);setTimeout(flush,50);toast('Đang đồng bộ lên Google Sheet…')}},icon('send'),'Đồng bộ ngay'):null,
+      h('button',{class:'btn'+(sheetUrl()?' ghost':''),type:'button',onclick:downloadCSV},icon('download'),'Xuất CSV (mở bằng Google Sheets)'),
+      h('button',{class:'btn ghost',type:'button',onclick:function(){copyText(sumText(),note)}},icon('copy'),'Sao chép báo cáo'),
+      h('button',{class:'btn ghost sm',type:'button',onclick:function(){openMenu(true)}},icon('sheet'),'Cài đặt URL Sheet')
+    ),
+    note
+  );
+  wrap.append(scard);
+  return wrap;
+};
+
+/* ================= trang Tổng quan (Dashboard) ================= */
+function renderDash(box){
+  var st=stats(),nx=nextStage(),nxSt=STAGES[nx],nxP=stageProg(nx);
+  var hero=h('section',{class:'hero'},
+    h('div',{class:'hero-l'},
+      h('div',null,
+        h('div',{class:'hero-tag'},'CHALLENGE UI · JAVA COLLECTIONS'),
+        h('div',{class:'gal-title'},
+          h('span',{class:'big'},'COLLECTIONS'),
+          h('span',{class:'scr'},'ArrayList & Map')
+        ),
+        h('div',{class:'hero-sub'},CONFIG.SESSION+' · 7 CHẶNG TƯƠNG TÁC')
+      ),
+      h('div',{class:'row'},
+        h('button',{class:'btn',type:'button',onclick:function(){go(nx)}},icon('play','fill'),st.done===0?'Khởi hành ngay':'Tiếp tục · '+nxSt.tab),
+        h('button',{class:'btn ghost',type:'button',onclick:function(){go(7)}},'Cheat Sheet & Tổng kết')
+      ),
+      h('div',{class:'dock','aria-label':'Lối tắt nhanh'},
+        h('button',{class:'dk-ic',type:'button',title:'Chặng 1: ArrayList cơ bản',onclick:function(){go(1)}},icon('layers')),
+        h('button',{class:'dk-ic',type:'button',title:'Chặng 3: HashMap cơ bản',onclick:function(){go(3)}},icon('box')),
+        h('button',{class:'dk-ic',type:'button',title:'Chặng 5: Ngoại lệ & Phòng thủ',onclick:function(){go(5)}},icon('lock')),
+        h('button',{class:'dk-ic',type:'button',title:'Chặng 6: Boss Bug Zoo',onclick:function(){go(6)}},icon('crown'))
+      )
+    ),
+    h('div',{class:'hero-r'},
+      h('h2',null,greet().toUpperCase()+', '+firstName().toUpperCase()+'!'),
+      h('p',null,st.done===0?'Chào mừng phi hành gia! Hãy làm chủ ArrayList<E>, HashMap<K,V>, hợp đồng equals/hashCode và cách ném/bắt ngoại lệ chuẩn OOP qua các mô phỏng từng bước.':'Bạn đã hoàn thành '+st.done+'/'+st.total+' thử thách ('+st.pct+'%) và đạt '+st.score+'/10 điểm. Tiếp tục Chặng '+nx+' ('+nxSt.tab+') để chinh phục trọn vẹn thiên hà Collections!')
+    ),
+    h('div',{class:'astro',html:"<svg viewBox=\"0 0 180 180\" aria-hidden=\"true\">\n  <defs>\n    <radialGradient id=\"ahSuit\" cx=\"35%\" cy=\"28%\" r=\"70%\"><stop offset=\"0%\" stop-color=\"#ffffff\"/><stop offset=\"60%\" stop-color=\"#dcd6fa\"/><stop offset=\"100%\" stop-color=\"#8b80c9\"/></radialGradient>\n    <linearGradient id=\"ahVisor\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#4e438a\"/><stop offset=\"100%\" stop-color=\"#191433\"/></linearGradient>\n  </defs>\n  <g transform=\"translate(22,12) rotate(12 70 70)\">\n    <rect x=\"44\" y=\"64\" width=\"48\" height=\"54\" rx=\"22\" fill=\"url(#ahSuit)\"/>\n    <rect x=\"22\" y=\"66\" width=\"24\" height=\"36\" rx=\"12\" transform=\"rotate(-32 34 84)\" fill=\"url(#ahSuit)\"/>\n    <rect x=\"90\" y=\"62\" width=\"24\" height=\"36\" rx=\"12\" transform=\"rotate(28 102 80)\" fill=\"url(#ahSuit)\"/>\n    <rect x=\"46\" y=\"108\" width=\"18\" height=\"32\" rx=\"9\" transform=\"rotate(14 55 124)\" fill=\"url(#ahSuit)\"/>\n    <rect x=\"70\" y=\"108\" width=\"18\" height=\"32\" rx=\"9\" transform=\"rotate(-10 79 124)\" fill=\"url(#ahSuit)\"/>\n    <circle cx=\"68\" cy=\"44\" r=\"30\" fill=\"url(#ahSuit)\"/>\n    <rect x=\"46\" y=\"30\" width=\"44\" height=\"26\" rx=\"13\" fill=\"url(#ahVisor)\"/>\n    <ellipse cx=\"58\" cy=\"37\" rx=\"7\" ry=\"3\" fill=\"#fff\" opacity=\".6\" transform=\"rotate(-12 58 37)\"/>\n  </g>\n</svg>"})
+  );
+  box.append(hero);
+
+  box.append(h('div',{class:'stats'},
+    statCard('c-purple','check','Thử thách hoàn tất',st.done,'/ '+st.total,'+'+st.pct+'% tiến độ hành trình'),
+    statCard('c-pink','target','Điểm hiện tại',st.score,'/ 10',st.first+' câu đúng ngay lần đầu'),
+    statCard('c-yellow','zap','Năng lượng & Huy hiệu',S.xp,'XP',S.badges.length+'/'+BADGES.length+' huy hiệu mở khóa'),
+    statCard('c-blue','clock','Thời gian & Điểm danh',Math.max(1,Math.round(S.timeMs/60000)),'phút','Điểm danh lúc '+fmtClock(S.lastCheckin||Date.now()))
+  ));
+
+  // 4 Bento Cosmic Quick-Launch Cards (matching bottom cosmic photo cards with -> buttons in reference image)
+  var quick=[
+    {i:1,sub:'CHẶNG 1–2 · O(1) vs O(n)',t:'Thiên hà ArrayList',d:'CRUD, remove(int) vs remove(Object), modCount & Stream'},
+    {i:3,sub:'CHẶNG 3–4 · KEY → VALUE',t:'Tinh vân HashMap',d:'Bucket, collision, cây đỏ-đen & hợp đồng equals/hashCode'},
+    {i:5,sub:'CHẶNG 5 · GUARD CLAUSE',t:'Lá chắn Ngoại lệ',d:'throw new ..., Custom Exception & unmodifiableList'},
+    {i:6,sub:'CHẶNG 6 · BUG ZOO',t:'Hố đen 6 Bug kinh điển',d:'Săn trọn 6 lỗi hiểm hóc nhất trong CourseManager'}
+  ];
+  var ggrid=h('div',{class:'gal-grid'});
+  quick.forEach(function(q){
+    var p=stageProg(q.i);
+    ggrid.append(h('button',{class:'gcard',type:'button',onclick:function(){go(q.i)}},
+      h('div',null,h('small',null,q.sub),h('b',null,q.t)),
+      h('span',{class:'sub'},q.d+' ('+p.d+'/'+p.n+')'),
+      h('span',{class:'arr','aria-hidden':'true'},'→')
+    ));
+  });
+  box.append(ggrid);
+
+  var bars=h('div',{class:'bars'});
+  for(var i=0;i<=6;i++){
+    (function(si){
+      var p=stageProg(si),pc=p.n?Math.round(p.d/p.n*100):0;
+      bars.append(h('button',{class:'bcol'+(si===nx?' cur':''),type:'button',title:'Mở Chặng '+si+': '+STAGES[si].title,onclick:function(){go(si)}},
+        h('span',{class:'bv'},p.d+'/'+p.n),
+        h('span',{class:'bt'},h('i',{style:'height:'+Math.max(8,pc)+'%'})),
+        h('span',{class:'bl'},STAGE_SHORT[si])
+      ));
+    })(i);
+  }
+  var chartCard=h('section',{class:'card'},
+    h('div',{class:'card-h'},h('h3',null,'Tiến độ theo từng chặng'),h('button',{class:'tagp',type:'button',onclick:function(){go(nx)}},'Chặng '+nx+' →')),
+    bars
+  );
+
+  var tot=st.total||1,p1=Math.round(st.first/tot*100),p2=Math.round((st.first+st.retry)/tot*100),p3=Math.round((st.first+st.retry+st.rv)/tot*100);
+  var grad=st.done?'conic-gradient(#1f7a56 0% '+p1+'%,#3b5998 '+p1+'% '+p2+'%,#b8780a '+p2+'% '+p3+'%,rgba(44,36,84,.18) '+p3+'% 100%)':'conic-gradient(rgba(44,36,84,.18) 0% 100%)';
+  var donutCard=h('section',{class:'card'},
+    h('div',{class:'card-h'},h('h3',null,'Phân bố kết quả'),h('span',{class:'tagp'},st.done+'/'+st.total+' bài')),
+    h('div',{class:'donut-w'},
+      h('div',{class:'donut',style:'background:'+grad},h('div',{class:'ct'},h('div',null,h('b',null,st.score),h('span',null,'điểm / 10')))),
+      h('div',{class:'lgd'},
+        h('div',null,h('i',{style:'background:#1f7a56'}),h('span',null,'Đúng ngay lần đầu'),h('b',null,st.first+' ('+p1+'%)')),
+        h('div',null,h('i',{style:'background:#3b5998'}),h('span',null,'Đúng sau khi thử lại'),h('b',null,st.retry)),
+        h('div',null,h('i',{style:'background:#b8780a'}),h('span',null,'Đã xem đáp án'),h('b',null,st.rv)),
+        h('div',null,h('i',{style:'background:rgba(44,36,84,.22)'}),h('span',null,'Chưa làm'),h('b',null,st.todo))
+      )
+    )
+  );
+  box.append(h('div',{class:'dgrid'},chartCard,donutCard));
+
+  var actBox=h('div',{class:'acts'}),recent=S.attempts.slice(-4).reverse();
+  if(!recent.length)actBox.append(h('div',{class:'empty'},'Chưa có lượt làm bài nào. Hãy chọn một chặng để khởi hành!'));
+  else recent.forEach(function(e){
+    var icn=e.ketQua==='đúng'?'check':(e.ketQua==='xem đáp án'?'eye':'x');
+    actBox.append(h('button',{class:'act',type:'button',onclick:function(){if(e.chang>=0)go(e.chang)}},
+      h('span',{class:'ti'},icon(icn)),
+      h('span',{class:'mt'},h('b',null,e.tenBai||TITLE_OF[e.baiTap]||e.baiTap),h('span',null,'Kết quả: '+e.ketQua+' · lần thử '+e.lanThu)),
+      h('span',{class:'tm'},ago(e.ts))
+    ));
+  });
+  var actCard=h('section',{class:'card'},
+    h('div',{class:'card-h'},h('h3',null,'Nhật ký phi hành đoàn'),h('button',{class:'tagp',type:'button',onclick:function(){go(7)}},'Tất cả')),
+    actBox
+  );
+
+  var nxp=nxP.n?Math.round(nxP.d/nxP.n*100):100;
+  var nextCard=h('section',{class:'card'},
+    h('div',{class:'card-h'},h('h3',null,'Trạm kế tiếp đề xuất'),h('button',{class:'tagp',type:'button',onclick:function(){go(nx)}},'Bay tới →')),
+    h('div',{class:'next'},
+      h('div',{class:'big'},icon(STAGE_IC[nx]||'rocket')),
+      h('small',null,'Chặng '+nx+' · khoảng '+nxSt.min+' phút'),
+      h('h4',null,nxSt.title),
+      h('p',null,nxSt.goal),
+      nxP.n?h('div',{class:'nb'},h('i',{style:'width:'+nxp+'%'})):null,
+      h('button',{class:'play',type:'button','aria-label':'Học chặng '+nx,onclick:function(){go(nx)}},icon('play','fill'))
+    )
+  );
+  box.append(h('div',{class:'dgrid'},actCard,nextCard));
+
+  box.append(h('section',{class:'banner'},
+    h('div',{class:'ti'},icon('sheet')),
+    h('div',{class:'mt'},
+      h('b',null,'Trạm thu phát Google Sheet (Điểm danh & Tiến độ)'),
+      h('span',{id:'bnTx'},syncLine())
+    ),
+    h('div',{class:'row'},
+      sheetUrl()?h('button',{class:'btn sm',type:'button',onclick:function(){queueProgress(0);setTimeout(flush,50);toast('Đang gửi lên Google Sheet…')}},icon('send'),'Đồng bộ ngay'):h('button',{class:'btn sm',type:'button',onclick:function(){openMenu(true)}},'Kết nối Sheet'),
+      h('button',{class:'btn ghost sm',type:'button',onclick:downloadCSV},icon('download'),'Tải CSV')
+    )
+  ));
+}
+
+/* ================= hiển thị chặng + điều hướng ================= */
+function renderStage(i){
+  var box=$('#stage');box.innerHTML='';chipReg=[];
+  if(i==null||i<0||i>=STAGES.length){
+    cur=-1;
+    $('#pgT').textContent='Tổng quan';$('#pgS').textContent=CONFIG.COURSE+' · '+CONFIG.SESSION;
+    renderDash(box);chrome();window.scrollTo(0,0);return;
+  }
+  cur=i;S.last=cur;save();queueProgress(3000);
+  var st=STAGES[cur],p=stageProg(cur);
+  $('#pgT').textContent=st.tab;$('#pgS').textContent='Chặng '+cur+' · khoảng '+st.min+' phút';
+  var rg=p.n?h('div',{class:'ring',id:'ring',style:ringBg(p)},h('span',{html:Math.round(p.d/p.n*100)+'%<small>'+p.d+'/'+p.n+' bài</small>'})):h('div',{class:'ring ico'},icon(STAGE_IC[cur]||'layers'));
+  box.append(h('div',{class:'sbanner'},
+    h('div',{class:'sbt'},h('div',{class:'eyebrow'},'Chặng '+cur+' · khoảng '+st.min+' phút'),h('h2',{class:'stg-h'},st.title),h('p',{class:'goal'},st.goal)),
+    h('div',{class:'bg'},icon(STAGE_IC[cur]||'layers')),
+    rg
+  ));
+  var sec=h('div',{class:'sec'});
+  st.blocks.forEach(function(b){var f=B[b.k];if(f)sec.append(f(b))});
+  box.append(sec);
+  var nav=h('div',{class:'pnav'});
+  nav.append(cur>0?h('button',{class:'btn ghost',type:'button',onclick:function(){go(cur-1)}},'← '+STAGES[cur-1].tab):h('button',{class:'btn ghost',type:'button',onclick:function(){go(-1)}},'← Tổng quan'));
+  nav.append(cur<STAGES.length-1?h('button',{class:'btn',type:'button',onclick:function(){go(cur+1)}},STAGES[cur+1].tab+' →'):h('button',{class:'btn',type:'button',onclick:function(){go(-1)}},'Về Tổng quan'));
+  box.append(nav);
+  chrome();chips();
+  window.scrollTo(0,0);
+}
+function go(i){
+  var tag=(i==null||i<0)?'tong-quan':'chang-'+i;
+  if(location.hash==='#'+tag)renderStage(i);else location.hash=tag;
+}
+function stageFromHash(){
+  if(location.hash==='#tong-quan')return -1;
+  var m=/^#chang-(\d+)$/.exec(location.hash);return m?+m[1]:null;
+}
+function closeNav(){document.body.classList.remove('nav-open');$('#scrim').hidden=true}
+window.addEventListener('hashchange',function(){if(!user)return;var n=stageFromHash();if(n!=null&&n!==cur)renderStage(n)});
+document.addEventListener('keydown',function(e){
+  if(!user||e.altKey||e.ctrlKey||e.metaKey)return;
+  var t=e.target&&e.target.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+  if(e.key==='ArrowRight'&&cur<STAGES.length-1)go(cur+1);
+  else if(e.key==='ArrowLeft'&&cur>=0)go(cur-1);
+});
+['pointerdown','keydown','scroll'].forEach(function(ev){window.addEventListener(ev,function(){lastInteract=Date.now()},{passive:true})});
+
+/* ================= đăng nhập, menu, giao diện ================= */
+function startSession(u,fromForm){
+  user=u;S=loadState(u.id);store.set('ktt.user',JSON.stringify(u));
+  if(fromForm||!S.lastCheckin||Date.now()-S.lastCheckin>30*60*1000){
+    S.checkins=(S.checkins||0)+1;S.lastCheckin=Date.now();
+    var ev=baseEv('checkin');ev.lanDiemDanh=S.checkins;ev.thietBi=navigator.platform||'';
+    enqueue(ev);queueProgress(600);
+  }
+  $('#login').hidden=true;$('#app').hidden=false;$('#nav').innerHTML='';
+  var n=stageFromHash();
+  renderStage(n!=null?n:-1);
+  if(n==null)history.replaceState(null,'','#tong-quan');
+  scheduleFlush(800);
+}
+function showLogin(){
+  queueProgress(0);flush();
+  user=null;S=null;$('#app').hidden=true;$('#login').hidden=false;$('#umenu').hidden=true;$('#lg-err').textContent='';
+  $('#stage').innerHTML='';$('#nav').innerHTML='';
+  var info=$('#lg-sync');
+  info.textContent=sheetUrl()?'✓ Đã kết nối Google Sheet — điểm danh sẽ được ghi tự động khi bạn vào học.':'';
+}
+$('#lgf').addEventListener('submit',function(e){
+  e.preventDefault();
+  var name=$('#lg-name').value.trim().replace(/\s+/g,' '),id=$('#lg-id').value.trim().replace(/\s+/g,'').toUpperCase(),lop=$('#lg-lop').value.trim().replace(/\s+/g,' ');
+  var err=$('#lg-err');
+  if(name.length<2){err.textContent='Vui lòng nhập họ và tên.';return}
+  if(!/^[A-Z0-9._-]{3,20}$/.test(id)){err.textContent='MSSV gồm 3 đến 20 ký tự chữ hoặc số.';return}
+  startSession({name:name,id:id,lop:lop},true);
+  toast('Điểm danh thành công! Chào '+firstName()+' 👋');
+});
+
+function openMenu(focusUrl){
+  var m=$('#umenu');m.innerHTML='';
+  var note=h('div'),tOut=h('div',{class:'cap'});
+  var inp=h('input',{type:'url',placeholder:'https://script.google.com/macros/s/.../exec',value:sheetUrl()});
+  var saveBtn=h('button',{class:'btn sm',type:'button',onclick:function(){
+    var v=inp.value.trim();
+    if(v&&!validUrl(v)){tOut.textContent='URL phải có dạng https://script.google.com/macros/s/.../exec';return}
+    CONFIG.SHEET_URL=v;store.set('col.sheet',v);SY.err=false;syncUI();
+    if(v){queueProgress(0);setTimeout(flush,80);tOut.textContent='Đã lưu URL và bắt đầu đồng bộ.'}
+    else tOut.textContent='Đã xóa URL Google Sheet.';
+  }},'Lưu URL');
+  var testBtn=h('button',{class:'btn ghost sm',type:'button',onclick:function(){
+    var v=inp.value.trim();if(v&&validUrl(v)){CONFIG.SHEET_URL=v;store.set('col.sheet',v)}
+    testConn(tOut);
+  }},'Kiểm tra');
+  var syncBtn=h('button',{class:'btn ghost sm',type:'button',onclick:function(){
+    var ev=baseEv('checkin');ev.lanDiemDanh=S.checkins||1;ev.thietBi=navigator.platform||'';
+    enqueue(ev);queueProgress(0);setTimeout(flush,50);tOut.textContent='Đang gửi dữ liệu điểm danh & tiến độ…';
+  }},'Gửi ngay');
+
+  m.append(
+    h('div',{class:'mhd'},
+      h('div',{class:'round uavatar','aria-hidden':'true'},initial()),
+      h('div',null,h('p',null,h('strong',null,user.name)),h('p',{class:'cap'},'MSSV: '+user.id+(user.lop?' · Lớp: '+user.lop:'')))
+    ),
+    h('div',{class:'mbox'},
+      h('h4',null,'Đồng bộ Google Sheet'),
+      h('p',{class:'cap',id:'syncLn'},syncLine()),
+      inp,
+      h('div',{class:'row'},saveBtn,testBtn,syncBtn),
+      tOut
+    ),
+    h('div',{class:'row'},
+      h('button',{class:'btn sm',type:'button',onclick:downloadCSV},icon('download'),'Xuất CSV'),
+      h('button',{class:'btn ghost sm',type:'button',onclick:function(){copyText(sumText(),note)}},icon('copy'),'Sao chép báo cáo'),
+      h('button',{class:'btn ghost sm',type:'button',onclick:showLogin},icon('logout'),'Đổi người')
+    ),
+    note
+  );
+  m.hidden=false;$('#usr').setAttribute('aria-expanded','true');
+  if(focusUrl)setTimeout(function(){try{inp.focus();inp.select()}catch(e){}},30);
+}
+$('#usr').addEventListener('click',function(){
+  var m=$('#umenu');
+  if(!m.hidden){m.hidden=true;$('#usr').setAttribute('aria-expanded','false');return}
+  openMenu(false);
+});
+$('#sync').addEventListener('click',function(){openMenu(!sheetUrl())});
+document.addEventListener('click',function(e){
+  var m=$('#umenu');if(m.hidden)return;
+  if(!m.contains(e.target)&&e.target!==$('#usr')&&!$('#usr').contains(e.target)&&e.target!==$('#sync')&&!$('#sync').contains(e.target)){
+    m.hidden=true;$('#usr').setAttribute('aria-expanded','false');
+  }
+});
+$('#menuBtn').addEventListener('click',function(){
+  var open=document.body.classList.toggle('nav-open');$('#scrim').hidden=!open;
+});
+$('#scrim').addEventListener('click',closeNav);
+
+function paintThemeBtn(){
+  var dark=document.documentElement.getAttribute('data-theme')==='dark';
+  var b=$('#thm');b.innerHTML=ic(dark?'sun':'moon');
+  b.title=dark?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối';
+}
+$('#thm').addEventListener('click',function(){
+  var r=document.documentElement,next=r.getAttribute('data-theme')==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);store.set('col.theme',next);paintThemeBtn();
+});
+window.addEventListener('online',function(){SY.err=false;flush()});
+window.addEventListener('pagehide',function(){if(S&&user){save();flush()}});
+
+setInterval(function(){
+  if(user&&S&&!document.hidden&&Date.now()-lastInteract<120000){
+    S.timeMs=(S.timeMs||0)+1000;
+    if(Math.floor(S.timeMs/1000)%15===0)save();
+    if(Math.floor(S.timeMs/1000)%120===0)queueProgress();
+  }
+  if(S)$('#clk').textContent=fmtTime(S.timeMs||0);
+},1000);
+
+(function boot(){
+  document.querySelectorAll('[data-ic]').forEach(function(el){el.prepend(icon(el.getAttribute('data-ic')))});
+  paintThemeBtn();
+  try{
+    var q=new URLSearchParams(location.search),s=q.get('sheet');
+    if(s&&validUrl(s)){store.set('col.sheet',s.trim());history.replaceState(null,'',location.pathname+location.hash)}
+  }catch(e){}
+  $('#lgInfo').textContent=STAGES.length+' chặng · '+ALL_IDS.length+' bài tập tương tác · huy hiệu';
+  var raw=store.get('ktt.user'),u=null;
+  try{u=raw?JSON.parse(raw):null}catch(e){u=null}
+  if(u&&u.name&&u.id)startSession(u,false);
+  else{showLogin();setTimeout(function(){try{$('#lg-name').focus()}catch(e){}},50)}
+})();
+})();
+</script>
+</body>
+</html>
